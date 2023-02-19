@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .home-btn {
+    @apply block h-15 max-w-[350px] rounded-[30px] border-2 text-center !leading-[60px];
+  }
+  .form-btn {
+    @apply mt-4 h-[38px] cursor-pointer rounded bg-raisin-black px-[50px] text-white;
+  }
+  .text-input {
+    @apply block h-[38px] w-full rounded border border-border-color px-3 placeholder-blue-gray;
+  }
+  .select {
+    @apply relative inline-block;
+  }
+  .select > select {
+    @apply h-[38px] w-full appearance-none rounded border border-border-color pl-3 pr-5;
+  }
+  .select::after {
+    border-width: 4px 3px 0 3px;
+    border-color: #373a3c transparent transparent transparent;
+    content: '';
+    @apply absolute top-1/2 right-[10px] -translate-y-1/2 transform;
+  }
+}
