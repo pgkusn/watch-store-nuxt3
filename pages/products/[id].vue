@@ -1,7 +1,6 @@
 <template>
   <div>
     <ProductNav :products="productData" :brand="$route.params.id" />
-
     <div class="container py-10 md:py-15">
       <ProductList :products="showProducts" />
       <Pagination
@@ -10,7 +9,6 @@
         :url="`/products/${$route.params.id}`"
       />
     </div>
-
     <Subscribe />
   </div>
 </template>
@@ -32,6 +30,10 @@ const showProducts = computed(() =>
 )
 
 if (productStore.products.length === 0) {
-  productStore.getProducts()
+  try {
+    await productStore.getProducts()
+  } catch ({ statusCode, statusMessage }) {
+    showError({ statusCode, statusMessage })
+  }
 }
 </script>

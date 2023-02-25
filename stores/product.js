@@ -20,33 +20,44 @@ export const useProductStore = defineStore(
       } else {
         state.splice(index, 1)
       }
-      // TODO: update state to server
+      // TODO: 將 state 存入資料庫
     }
     const getProducts = async () => {
-      try {
-        const { data } = await useFetch(API.products.url, {
-          baseURL: runtimeConfig.public.mockApiUrl,
-          method: API.products.method,
+      const { data, error } = await useFetch(API.products.url, {
+        baseURL: runtimeConfig.public.mockApiUrl,
+        method: API.products.method,
+      })
+
+      if (error.value) {
+        throw createError({
+          statusCode: error.value.statusCode,
+          statusMessage: 'Oops! Something went wrong.',
         })
-        products.value = Object.keys(data.value).map(key => ({
-          id: key,
-          ...data.value[key],
-        }))
-      } catch (error) {
-        console.error(error.message)
       }
+
+      products.value = Object.keys(data.value).map(key => ({
+        id: key,
+        ...data.value[key],
+      }))
     }
     const getProduct = async id => {
-      try {
-        const url = API.product.url.replace(':id', id)
-        const { data } = await useFetch(url, {
-          baseURL: runtimeConfig.public.mockApiUrl,
-          method: API.product.method,
+      const url = API.product.url.replace(':id', id)
+      const { data, error } = await useFetch(url, {
+        baseURL: runtimeConfig.public.mockApiUrl,
+        method: API.product.method,
+      })
+
+      if (error.value) {
+        throw createError({
+          statusCode: error.value.statusCode,
+          statusMessage: 'Oops! Something went wrong.',
         })
-        return { id, ...data }
-      } catch (error) {
-        console.error(error.message)
       }
+      if (!data.value) {
+        throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
+      }
+
+      return { id, ...data.value }
     }
 
     return {
