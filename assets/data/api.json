@@ -1,0 +1,54 @@
+{
+    "products": {
+        "method": "get",
+        "url": "/products.json"
+    },
+    "product": {
+        "method": "get",
+        "url": "/product/:id.json"
+    },
+    "userLogin": {
+        "method": "post",
+        "url": "/accounts:signInWithPassword"
+    },
+    "userSignUp": {
+        "method": "post",
+        "url": "/accounts:signUp"
+    },
+    "changePassword": {
+        "method": "post",
+        "url": "/accounts:update"
+    },
+    "resetPassword": {
+        "method": "post",
+        "url": "/accounts:sendOobCode"
+    },
+    "refreshToken": {
+        "method": "post",
+        "url": "/token"
+    },
+    "readProfile": {
+        "method": "get",
+        "url": "/member/:uid/profile.json"
+    },
+    "updateProfile": {
+        "method": "put",
+        "url": "/member/:uid/profile.json"
+    },
+    "readPreferences": {
+        "method": "get",
+        "url": "/member/:uid/preferences.json"
+    },
+    "updatePreferences": {
+        "method": "put",
+        "url": "/member/:uid/preferences.json"
+    },
+    "createOrder": {
+        "method": "post",
+        "url": "/member/:uid/order.json"
+    },
+    "readOrders": {
+        "method": "get",
+        "url": "/member/:uid/order.json"
+    }
+}

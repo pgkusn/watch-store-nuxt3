@@ -1,6 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/tailwindcss', '@nuxt/devtools', '@pinia/nuxt'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    '@nuxt/devtools',
+    '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt',
+  ],
   postcss: {
     plugins: {
       'tailwindcss/nesting': {},
@@ -8,7 +13,9 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  app: {
-    pageTransition: { name: 'page', mode: 'out-in' },
+  runtimeConfig: {
+    public: {
+      mockApiUrl: 'http://localhost:4001',
+    },
   },
 })

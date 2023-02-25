@@ -16,7 +16,6 @@ useHead({
   // TODO: og meta
 
   link: [
-    // FIXME: favicon not working
     { rel: 'icon', type: 'image/x-icon', href: '/favicon.svg' },
     { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' },
   ],
