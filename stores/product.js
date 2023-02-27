@@ -1,10 +1,13 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
+import { cloneDeep } from 'lodash-es'
 import API from '@/assets/data/api.json'
+import { useMemberStore } from '@/stores/member'
 
 export const useProductStore = defineStore(
   'product',
   () => {
     const runtimeConfig = useRuntimeConfig()
+    const memberStore = useMemberStore()
 
     const products = ref([])
     const states = ref({
@@ -13,18 +16,19 @@ export const useProductStore = defineStore(
     })
 
     const updateState = ({ name, value }) => {
-      const state = states.value[name]
-      const index = state.findIndex(item => item.id === value.id)
+      const cloneStates = cloneDeep(states.value)
+      const index = cloneStates[name].findIndex(item => item.id === value.id)
       if (index === -1) {
-        state.push(value)
+        cloneStates[name].push(value)
       } else {
-        state.splice(index, 1)
+        cloneStates[name].splice(index, 1)
       }
-      // TODO: 將 state 存入資料庫
+      states.value = cloneStates
+      memberStore.updatePreferences(cloneStates)
     }
     const getProducts = async () => {
       const { data, error } = await useFetch(API.products.url, {
-        baseURL: runtimeConfig.public.mockApiUrl,
+        baseURL: runtimeConfig.public.dbApiUrl,
         method: API.products.method,
       })
 
@@ -43,7 +47,7 @@ export const useProductStore = defineStore(
     const getProduct = async id => {
       const url = API.product.url.replace(':id', id)
       const { data, error } = await useFetch(url, {
-        baseURL: runtimeConfig.public.mockApiUrl,
+        baseURL: runtimeConfig.public.dbApiUrl,
         method: API.product.method,
       })
 

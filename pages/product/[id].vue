@@ -112,7 +112,6 @@ const inFavorite = computed(() => states.value.favorite.find(item => item.id ===
 const inCart = computed(() => states.value.cart.find(item => item.id === product.value.id))
 
 const updateState = name => {
-  // FIXME: value is undefined
   const value = productData.value.find(item => item.id === product.value.id)
   value.amount = amount.value
   productStore.updateState({ name, value })

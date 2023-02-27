@@ -45,9 +45,15 @@
 </template>
 
 <script setup>
-// TODO: use product/member store
-const cart = []
-const loginInfo = false
+import { useProductStore } from '@/stores/product'
+import { useMemberStore } from '@/stores/member'
+
+const route = useRoute()
+const productStore = useProductStore()
+const memberStore = useMemberStore()
+
+const cart = computed(() => productStore.states.cart)
+const loginInfo = computed(() => memberStore.loginInfo)
 
 // toggle nav
 const showNav = ref(false)
@@ -60,7 +66,6 @@ const stopPropagation = e => {
 
 onMounted(() => {
   document.addEventListener('click', clickHandler)
-  // TODO: read localStorage
 })
 onBeforeUnmount(() => {
   document.removeEventListener('click', clickHandler)

@@ -18,6 +18,7 @@ export default defineNuxtConfig({
       mockApiUrl: 'http://localhost:4001',
       dbApiUrl: 'https://perfume-8b21d-default-rtdb.firebaseio.com',
       authApiUrl: 'https://identitytoolkit.googleapis.com/v1',
+      firebaseApiKey: '', // override in .env
     },
   },
 })
