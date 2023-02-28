@@ -35,7 +35,7 @@
       <div class="mt-9 flex items-center">
         <a href class="mr-auto text-raisin-black" @click.prevent="forgotPassword"> 忘記密碼 </a>
         <nuxt-link
-          to="/signUp/createAccount"
+          to="/signup"
           class="w-[65px] rounded border border-raisin-black text-center leading-[36px] text-raisin-black focus:outline-none"
         >
           註冊
@@ -79,10 +79,7 @@ const submitHandler = async () => {
       productStore.states.favorite = favorite
       productStore.states.cart = cart
     } else {
-      await memberStore.updatePreferences({
-        favorite: productStore.states.favorite,
-        cart: productStore.states.cart,
-      })
+      await memberStore.updatePreferences()
     }
 
     await mainStore.setAlertMsgHandler('登入成功')

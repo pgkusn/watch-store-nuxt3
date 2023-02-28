@@ -23,8 +23,12 @@ export const useProductStore = defineStore(
       } else {
         cloneStates[name].splice(index, 1)
       }
+
       states.value = cloneStates
-      memberStore.updatePreferences(cloneStates)
+
+      if (memberStore.loginInfo) {
+        memberStore.updatePreferences(cloneStates)
+      }
     }
     const getProducts = async () => {
       const { data, error } = await useFetch(API.products.url, {

@@ -1,8 +1,10 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import API from '@/assets/data/api.json'
+import { useProductStore } from './product'
 
 export const useMemberStore = defineStore('member', () => {
   const runtimeConfig = useRuntimeConfig()
+  const productStore = useProductStore()
   const cookie = useCookie('loginInfo')
 
   const loginInfo = ref(null)
@@ -45,7 +47,11 @@ export const useMemberStore = defineStore('member', () => {
   const userLogout = () => {
     loginInfo.value = null
     cookie.value = null
-    // TODO: reset other states
+    productStore.states = {
+      favorite: [],
+      cart: [],
+    }
+    // TODO: reset profile, orders
   }
   const readPreferences = async () => {
     const { localId, idToken: auth } = loginInfo.value || {}
@@ -64,13 +70,16 @@ export const useMemberStore = defineStore('member', () => {
 
     return data.value
   }
-  const updatePreferences = async body => {
+  const updatePreferences = async () => {
     const { localId, idToken: auth } = loginInfo.value || {}
     const { error } = await useFetch(API.updatePreferences.url.replace(':uid', localId), {
       baseURL: runtimeConfig.public.dbApiUrl,
       method: API.updatePreferences.method,
       params: { auth },
-      body,
+      body: {
+        favorite: productStore.states.favorite,
+        cart: productStore.states.cart,
+      },
     })
 
     if (error.value) {
@@ -109,6 +118,59 @@ export const useMemberStore = defineStore('member', () => {
       })
     }
   }
+  const userSignUp = async ({ email, password }) => {
+    const { data, error } = await useFetch(API.userSignUp.url, {
+      baseURL: runtimeConfig.public.authApiUrl,
+      method: API.userSignUp.method,
+      body: {
+        email,
+        password,
+        returnSecureToken: true,
+      },
+      params: {
+        key: runtimeConfig.public.firebaseApiKey,
+      },
+    })
+
+    if (error.value) {
+      let statusMessage = error.value.data?.error?.message
+      switch (statusMessage) {
+        case 'EMAIL_EXISTS':
+          statusMessage = 'Email 重複'
+          break
+        case 'INVALID_EMAIL':
+          statusMessage = 'Email 格式錯誤'
+          break
+      }
+      throw createError({
+        statusCode: error.value.statusCode,
+        statusMessage,
+      })
+    }
+
+    return data.value
+  }
+  const createProfile = async (signUpData, body) => {
+    const url = API.updateProfile.url.replace(':uid', signUpData.localId)
+    const { error } = await useFetch(url, {
+      baseURL: runtimeConfig.public.dbApiUrl,
+      method: API.updateProfile.method,
+      body,
+      params: {
+        auth: signUpData.idToken,
+      },
+    })
+
+    if (error.value) {
+      throw createError({
+        statusCode: error.value.statusCode,
+        statusMessage: error.value.data?.error?.message,
+      })
+    }
+
+    loginInfo.value = signUpData
+    cookie.value = signUpData
+  }
 
   return {
     loginInfo,
@@ -117,6 +179,8 @@ export const useMemberStore = defineStore('member', () => {
     readPreferences,
     updatePreferences,
     resetPassword,
+    userSignUp,
+    createProfile,
   }
 })
 
