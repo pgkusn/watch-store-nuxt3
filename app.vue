@@ -12,9 +12,12 @@
 <script setup>
 useHead({
   title: 'Watch Store',
-
-  // TODO: og meta
-
+  meta: [
+    { property: 'og:url', content: 'https://watch-store-nuxt3.vercel.app/' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:title', content: 'Watch Store' },
+    { property: 'og:image', content: 'https://watch-store-nuxt3.vercel.app/hero.jpg' },
+  ],
   link: [
     { rel: 'icon', type: 'image/x-icon', href: '/favicon.svg' },
     { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' },
