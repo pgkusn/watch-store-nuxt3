@@ -29,7 +29,10 @@
               b.以獨特的風格設計風靡全球，品牌風格結合藝術與文化上的陶冶，加大霧銀色面綴以品牌創辦人Agnes
               Trouble 手寫體時標，搭配咖啡色皮質錶帶，體現品牌的法式優雅
             </p>
-            <nuxt-link to="/product/1" class="mt-2 inline-block font-bold text-coral-black md:mt-4">
+            <nuxt-link
+              to="/product/-N4ovK54kX-522rdJi67"
+              class="mt-2 inline-block font-bold text-coral-black md:mt-4"
+            >
               查看更多
             </nuxt-link>
           </div>
@@ -44,7 +47,7 @@
               源自美國的品牌<br />強調純粹簡單，輕鬆優雅的設計款式<br />是重視極簡迷人魅力的你不可錯過的一款錶
             </p>
             <nuxt-link
-              to="/product/12"
+              to="/product/-N4ovK5D01CE3svll6Gu"
               class="mt-2 inline-block font-bold text-coral-black md:mt-4"
             >
               查看更多
@@ -61,7 +64,7 @@
               經典Logo面盤，時尚品牌，致力於經典與流行之間，並展現品牌企圖心，用以結合時尚與現代美感，簡約時尚設計，流露出優雅大方的亮采風情，搭配心情或場所，怡然呈現！
             </p>
             <nuxt-link
-              to="/product/13"
+              to="/product/-N4ovK5D01CE3svll6Gv"
               class="mt-2 inline-block font-bold text-coral-black md:mt-4"
             >
               查看更多
@@ -102,7 +105,7 @@
     <div class="bg-gray py-8 md:py-10">
       <div class="container flex flex-col items-center md:flex-row md:items-start">
         <div class="relative w-[345px] md:w-0 md:flex-grow" data-aos="fade-up">
-          <nuxt-link to="/product/2" class="block">
+          <nuxt-link to="/product/-N4ovK57xoQ50_EkI9Nz" class="block">
             <div
               class="bg-cover bg-center pt-[101%] md:pt-[150%]"
               style="
@@ -124,7 +127,7 @@
           data-aos="fade-up"
           :data-aos-delay="isMediumScreen ? 50 : 0"
         >
-          <nuxt-link to="/product/15" class="block">
+          <nuxt-link to="/product/-N4ovK5EqDLbydHnjbAQ" class="block">
             <div
               class="bg-cover bg-center pt-[101%] md:pt-[150%]"
               style="
