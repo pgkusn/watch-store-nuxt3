@@ -8,18 +8,20 @@ export const useMemberStore = defineStore('member', () => {
   const cookie = useCookie('loginInfo')
 
   const loginInfo = ref(null)
+  const orders = ref([])
+  const profile = ref(null)
 
   const userLogin = async ({ email, password }) => {
     const { data, error } = await useFetch(API.userLogin.url, {
       baseURL: runtimeConfig.public.authApiUrl,
       method: API.userLogin.method,
+      params: {
+        key: runtimeConfig.public.firebaseApiKey,
+      },
       body: {
         email,
         password,
         returnSecureToken: true,
-      },
-      params: {
-        key: runtimeConfig.public.firebaseApiKey,
       },
     })
 
@@ -47,11 +49,12 @@ export const useMemberStore = defineStore('member', () => {
   const userLogout = () => {
     loginInfo.value = null
     cookie.value = null
+    orders.value = []
+    profile.value = null
     productStore.states = {
       favorite: [],
       cart: [],
     }
-    // TODO: reset profile, orders
   }
   const readPreferences = async () => {
     const { localId, idToken: auth } = loginInfo.value || {}
@@ -89,16 +92,38 @@ export const useMemberStore = defineStore('member', () => {
       })
     }
   }
+  const updatePassword = async password => {
+    const { idToken } = loginInfo.value || {}
+    const { error } = await useFetch(API.changePassword.url, {
+      baseURL: runtimeConfig.public.authApiUrl,
+      method: API.changePassword.method,
+      params: {
+        key: runtimeConfig.public.firebaseApiKey,
+      },
+      body: {
+        idToken,
+        password,
+        returnSecureToken: true,
+      },
+    })
+
+    if (error.value) {
+      throw createError({
+        statusCode: error.value.statusCode,
+        statusMessage: error.value.data?.error?.message,
+      })
+    }
+  }
   const resetPassword = async email => {
     const { error } = await useFetch(API.resetPassword.url, {
       baseURL: runtimeConfig.public.authApiUrl,
       method: API.resetPassword.method,
+      params: {
+        key: runtimeConfig.public.firebaseApiKey,
+      },
       body: {
         requestType: 'PASSWORD_RESET',
         email,
-      },
-      params: {
-        key: runtimeConfig.public.firebaseApiKey,
       },
     })
 
@@ -122,13 +147,13 @@ export const useMemberStore = defineStore('member', () => {
     const { data, error } = await useFetch(API.userSignUp.url, {
       baseURL: runtimeConfig.public.authApiUrl,
       method: API.userSignUp.method,
+      params: {
+        key: runtimeConfig.public.firebaseApiKey,
+      },
       body: {
         email,
         password,
         returnSecureToken: true,
-      },
-      params: {
-        key: runtimeConfig.public.firebaseApiKey,
       },
     })
 
@@ -155,10 +180,10 @@ export const useMemberStore = defineStore('member', () => {
     const { error } = await useFetch(url, {
       baseURL: runtimeConfig.public.dbApiUrl,
       method: API.updateProfile.method,
-      body,
       params: {
         auth: signUpData.idToken,
       },
+      body,
     })
 
     if (error.value) {
@@ -171,16 +196,81 @@ export const useMemberStore = defineStore('member', () => {
     loginInfo.value = signUpData
     cookie.value = signUpData
   }
+  const updateProfile = async body => {
+    const { localId, idToken: auth, email } = loginInfo.value || {}
+    const url = API.updateProfile.url.replace(':uid', localId)
+    const { data, error } = await useFetch(url, {
+      baseURL: runtimeConfig.public.dbApiUrl,
+      method: API.updateProfile.method,
+      params: { auth },
+      body,
+    })
+
+    if (error.value) {
+      throw createError({
+        statusCode: error.value.statusCode,
+        statusMessage: error.value.data?.error?.message,
+      })
+    }
+
+    profile.value = { email, ...data.value }
+  }
+  const readProfile = async () => {
+    const { localId, idToken: auth, email } = loginInfo.value || {}
+    const url = API.readProfile.url.replace(':uid', localId)
+    const { data, error } = await useFetch(url, {
+      baseURL: runtimeConfig.public.dbApiUrl,
+      method: API.readProfile.method,
+      params: { auth },
+    })
+
+    if (error.value) {
+      throw createError({
+        statusCode: error.value.statusCode,
+        statusMessage: error.value.data?.error?.message,
+      })
+    }
+
+    profile.value = { email, ...data.value }
+    console.log(data.value)
+  }
+  const readOrders = async () => {
+    const { localId, idToken: auth } = loginInfo.value || {}
+    const url = API.readOrders.url.replace(':uid', localId)
+    const { data, error } = await useFetch(url, {
+      baseURL: runtimeConfig.public.dbApiUrl,
+      method: API.readOrders.method,
+      params: { auth },
+    })
+
+    if (error.value) {
+      throw createError({
+        statusCode: error.value.statusCode,
+        statusMessage: error.value.data?.error?.message,
+      })
+    }
+
+    orders.value = Object.keys(data.value).reduce((previousValue, currentValue) => {
+      previousValue.push({ orderID: currentValue, ...data.value[currentValue] })
+      return previousValue
+    }, [])
+  }
 
   return {
     loginInfo,
+    orders,
+    profile,
     userLogin,
     userLogout,
     readPreferences,
     updatePreferences,
+    updatePassword,
     resetPassword,
     userSignUp,
     createProfile,
+    updateProfile,
+    readProfile,
+    readOrders,
   }
 })
 

@@ -87,7 +87,7 @@ const submitHandler = async () => {
   } catch ({ statusCode, statusMessage }) {
     if (statusCode === 401) {
       await mainStore.setAlertMsgHandler('登入逾時，請重新登入！')
-      mainStore.userLogout()
+      memberStore.userLogout()
       router.replace('/login')
       return
     }
