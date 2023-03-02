@@ -85,13 +85,7 @@ const submitHandler = async () => {
     await mainStore.setAlertMsgHandler('登入成功')
     router.replace(route.query.redirect || '/')
   } catch ({ statusCode, statusMessage }) {
-    if (statusCode === 401) {
-      await mainStore.setAlertMsgHandler('登入逾時，請重新登入！')
-      memberStore.userLogout()
-      router.replace('/login')
-      return
-    }
-    mainStore.setAlertMsgHandler(statusMessage)
+    showError({ statusCode, statusMessage })
   }
 }
 const forgotPassword = async () => {

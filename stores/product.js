@@ -37,10 +37,11 @@ export const useProductStore = defineStore(
       })
 
       if (error.value) {
-        throw createError({
+        showError({
           statusCode: error.value.statusCode,
-          statusMessage: 'Oops! Something went wrong.',
+          statusMessage: error.value.data?.error?.message,
         })
+        return
       }
 
       products.value = Object.keys(data.value).map(key => ({
@@ -56,13 +57,16 @@ export const useProductStore = defineStore(
       })
 
       if (error.value) {
-        throw createError({
+        showError({
           statusCode: error.value.statusCode,
-          statusMessage: 'Oops! Something went wrong.',
+          statusMessage: error.value.data?.error?.message,
         })
+        return
       }
+
       if (!data.value) {
-        throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
+        showError({ statusCode: 404, statusMessage: 'Page Not Found' })
+        return
       }
 
       return { id, ...data.value }

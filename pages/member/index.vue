@@ -231,6 +231,12 @@ const updateProfile = async () => {
     await memberStore.updateProfile(profileData)
     mainStore.setAlertMsgHandler('個人資料修改成功')
   } catch ({ statusCode, statusMessage }) {
+    if (statusCode === 401) {
+      await mainStore.setAlertMsgHandler('登入逾時，請重新登入！')
+      memberStore.userLogout()
+      router.replace('/login?redirect=member')
+      return
+    }
     showError({ statusCode, statusMessage })
   }
 }

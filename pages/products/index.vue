@@ -9,12 +9,9 @@ const router = useRouter()
 const productStore = useProductStore()
 
 if (productStore.products.length === 0) {
-  try {
-    await productStore.getProducts()
-  } catch ({ statusCode, statusMessage }) {
-    showError({ statusCode, statusMessage })
-  }
+  await productStore.getProducts()
 }
-
-router.replace(`/products/${productStore.products[0].brand}`)
+if (productStore.products.length) {
+  router.replace(`/products/${productStore.products[0].brand}`)
+}
 </script>

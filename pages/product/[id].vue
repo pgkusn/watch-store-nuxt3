@@ -118,18 +118,10 @@ const updateState = name => {
 }
 
 if (productStore.products.length === 0) {
-  try {
-    await productStore.getProducts()
-  } catch ({ statusCode, statusMessage }) {
-    showError({ statusCode, statusMessage })
-  }
+  await productStore.getProducts()
 }
 
-try {
-  product.value = await productStore.getProduct(route.params.id)
-} catch ({ statusCode, statusMessage }) {
-  showError({ statusCode, statusMessage })
-}
+product.value = await productStore.getProduct(route.params.id)
 </script>
 
 <style lang="scss" scoped>

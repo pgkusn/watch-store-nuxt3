@@ -25,15 +25,15 @@ const singleBrandProduct = computed(() =>
   productData.value.filter(item => item.brand === (route.params.id || 'agnes'))
 )
 const products = showList(singleBrandProduct)
-const showProducts = computed(() =>
-  route.query.page ? products.value[route.query.page - 1] : products.value[0]
-)
+const showProducts = computed(() => {
+  const values = route.query.page ? products.value[route.query.page - 1] : products.value[0]
+  if (!values) {
+    showError({ statusCode: 404, statusMessage: 'Page Not Found' })
+  }
+  return values
+})
 
 if (productStore.products.length === 0) {
-  try {
-    await productStore.getProducts()
-  } catch ({ statusCode, statusMessage }) {
-    showError({ statusCode, statusMessage })
-  }
+  productStore.getProducts()
 }
 </script>
