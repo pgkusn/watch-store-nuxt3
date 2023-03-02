@@ -299,9 +299,9 @@ onMounted(async () => {
       await mainStore.setAlertMsgHandler('登入逾時，請重新登入！')
       memberStore.userLogout()
       router.replace('/login?redirect=member')
-    } else {
-      showError({ statusCode, statusMessage })
+      return
     }
+    showError({ statusCode, statusMessage })
   }
 })
 </script>

@@ -10,8 +10,6 @@
 </template>
 
 <script setup>
-import { useMemberStore } from '@/stores/member'
-
 useHead({
   title: 'Watch Store',
 
@@ -22,13 +20,6 @@ useHead({
     { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' },
   ],
 })
-
-// check login status
-const memberStore = useMemberStore()
-const cookie = useCookie('loginInfo')
-if (cookie.value) {
-  memberStore.loginInfo = cookie.value
-}
 </script>
 
 <style lang="postcss">
