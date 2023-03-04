@@ -21,6 +21,10 @@
 <script setup>
 import { useProductStore } from '@/stores/product'
 
+useHead({
+  title: '我的收藏',
+})
+
 const router = useRouter()
 const route = useRoute()
 const productStore = useProductStore()

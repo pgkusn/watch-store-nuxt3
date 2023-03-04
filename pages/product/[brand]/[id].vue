@@ -95,6 +95,10 @@ const { states } = storeToRefs(productStore)
 const product = ref(null)
 const productData = computed(() => productStore.products)
 
+useHead({
+  title: computed(() => product.value?.name),
+})
+
 const amount = ref(1)
 const amountComputed = computed({
   get() {

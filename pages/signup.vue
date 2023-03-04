@@ -144,6 +144,10 @@
 import { useMainStore } from '@/stores/main'
 import { useMemberStore } from '@/stores/member'
 
+useHead({
+  title: '註冊',
+})
+
 const router = useRouter()
 const mainStore = useMainStore()
 const memberStore = useMemberStore()

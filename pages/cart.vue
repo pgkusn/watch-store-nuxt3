@@ -31,6 +31,10 @@ import { useMainStore } from '@/stores/main'
 import { useProductStore } from '@/stores/product'
 import { useMemberStore } from '@/stores/member'
 
+useHead({
+  title: '購物車',
+})
+
 const router = useRouter()
 const route = useRoute()
 const mainStore = useMainStore()

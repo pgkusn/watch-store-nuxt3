@@ -127,6 +127,10 @@
 <script setup>
 import { useMemberStore } from '@/stores/member'
 
+useHead({
+  title: '訂單查詢',
+})
+
 const memberStore = useMemberStore()
 const { $dayjs } = useNuxtApp()
 const { showList } = useShowList()

@@ -189,6 +189,10 @@ import { useMainStore } from '@/stores/main'
 import { useMemberStore } from '@/stores/member'
 import { useProductStore } from '@/stores/product'
 
+useHead({
+  title: '會員資料修改',
+})
+
 const router = useRouter()
 const mainStore = useMainStore()
 const memberStore = useMemberStore()

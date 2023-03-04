@@ -11,7 +11,9 @@
 
 <script setup>
 useHead({
-  title: 'Watch Store',
+  titleTemplate: titleChunk => {
+    return titleChunk ? `${titleChunk} - Watch Store` : 'Watch Store'
+  },
   meta: [
     { property: 'og:url', content: 'https://watch-store-nuxt3.vercel.app/' },
     { property: 'og:type', content: 'website' },

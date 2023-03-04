@@ -16,6 +16,10 @@
 <script setup>
 import { useProductStore } from '@/stores/product'
 
+useHead({
+  title: '產品',
+})
+
 const route = useRoute()
 const productStore = useProductStore()
 const { showList } = useShowList()
