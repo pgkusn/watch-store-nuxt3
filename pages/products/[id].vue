@@ -36,4 +36,11 @@ const showProducts = computed(() => {
 if (productStore.products.length === 0) {
   productStore.getProducts()
 }
+
+onMounted(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  })
+})
 </script>
