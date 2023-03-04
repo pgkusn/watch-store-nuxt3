@@ -1,6 +1,9 @@
 module.exports = {
   theme: {
     extend: {
+      screens: {
+        betterhover: { raw: '(hover: hover)' },
+      },
       colors: ({ colors }) => ({
         'default-gray': colors.gray,
         gray: '#E0E0E0',

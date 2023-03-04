@@ -73,7 +73,7 @@
       <div class="pagination flex items-center">
         <button
           type="button"
-          class="w-full rounded-l-xl border-t border-b border-[#e5e7eb] bg-white p-4 text-base text-default-gray-600 hover:bg-default-gray-100 focus:outline-none disabled:cursor-default disabled:text-opacity-50 disabled:hover:bg-transparent"
+          class="w-full rounded-l-xl border-t border-b border-[#e5e7eb] bg-white p-4 text-base text-default-gray-600 focus:outline-none disabled:cursor-default disabled:text-opacity-50 betterhover:hover:bg-default-gray-100 disabled:betterhover:hover:bg-transparent"
           :disabled="currentPage === 1"
           @click="currentPage -= 1"
         >
@@ -94,7 +94,7 @@
           v-for="n in showOrders.length"
           :key="n"
           type="button"
-          class="w-full border-t border-b border-[#e5e7eb] bg-white px-4 py-2 text-base text-raisin-black hover:bg-default-gray-100 focus:outline-none"
+          class="w-full border-t border-b border-[#e5e7eb] bg-white px-4 py-2 text-base text-raisin-black focus:outline-none betterhover:hover:bg-default-gray-100"
           :class="n === currentPage ? 'text-raisin-black' : 'text-default-gray-600'"
           @click="currentPage = n"
         >
@@ -102,7 +102,7 @@
         </button>
         <button
           type="button"
-          class="w-full rounded-r-xl border-t border-b border-[#e5e7eb] bg-white p-4 text-base text-default-gray-600 hover:bg-default-gray-100 focus:outline-none disabled:cursor-default disabled:text-opacity-50 disabled:hover:bg-transparent"
+          class="w-full rounded-r-xl border-t border-b border-[#e5e7eb] bg-white p-4 text-base text-default-gray-600 focus:outline-none disabled:cursor-default disabled:text-opacity-50 betterhover:hover:bg-default-gray-100 disabled:betterhover:hover:bg-transparent"
           :disabled="currentPage === showOrders.length"
           @click="currentPage += 1"
         >

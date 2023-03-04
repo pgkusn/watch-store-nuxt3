@@ -4,7 +4,7 @@
 
 @layer components {
   .home-btn {
-    @apply block h-15 max-w-[350px] rounded-[30px] border-2 text-center !leading-[60px];
+    @apply block h-15 max-w-[350px] rounded-[30px] border-2 text-center !leading-[56px];
   }
   .form-btn {
     @apply mt-4 h-[38px] cursor-pointer rounded bg-raisin-black px-[50px] text-white;
