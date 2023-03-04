@@ -4,7 +4,7 @@
   >
     <div v-for="product in products" :key="product.id" class="group relative flex flex-col">
       <nuxt-link
-        :to="`/product/${product.id}`"
+        :to="`/product/${product.brand}/${product.id}`"
         class="product-link bg-50% relative block bg-white bg-center bg-no-repeat pt-[100%]"
       >
         <div
@@ -30,7 +30,7 @@
               : formatPrice(product.price)
           }}
         </li>
-        <li v-if="product.discount" class="ml-[6px] text-dark-gray line-through">
+        <li v-if="product.discount < 1" class="ml-[6px] text-dark-gray line-through">
           {{ formatPrice(product.price) }}
         </li>
       </ul>

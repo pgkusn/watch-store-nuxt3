@@ -2,7 +2,7 @@
   <NuxtLayout>
     <!-- transition issue solution (https://github.com/nuxt/nuxt/issues/13350#issuecomment-1397297975) -->
     <Transition name="page" mode="out-in">
-      <div :key="$route.fullPath">
+      <div :key="$route.name">
         <NuxtPage />
       </div>
     </Transition>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ProductNav :products="productData" :brand="brand" />
+    <ProductNav :products="productData" :brand="$route.params.brand" />
     <div
       v-if="product"
       class="container grid grid-rows-[repeat(5,auto)] gap-[30px] py-10 md:grid-cols-3 md:grid-rows-[repeat(3,auto)] md:py-15"
@@ -37,7 +37,7 @@
             </div>
             <input
               type="submit"
-              :value="inCart ? '已加入購物車' : '加入購物車'"
+              :value="inCart ? '從購物車移除' : '加入購物車'"
               class="w-[55%] cursor-pointer rounded-r rounded-l-none bg-raisin-black text-white"
             />
           </form>
@@ -94,9 +94,6 @@ const { formatPrice } = useFormatPrice()
 const { states } = storeToRefs(productStore)
 const product = ref(null)
 const productData = computed(() => productStore.products)
-const brand = computed(
-  () => productData.value.find(item => item.id === Number(route.params.id))?.brand
-)
 
 const amount = ref(1)
 const amountComputed = computed({

@@ -1,12 +1,12 @@
 <template>
   <div>
-    <ProductNav :products="productData" :brand="$route.params.id" />
+    <ProductNav :products="productData" :brand="$route.params.brand" />
     <div class="container py-10 md:py-15">
       <ProductList :products="showProducts" />
       <Pagination
         :pages="products.length"
         :page="$route.query.page"
-        :url="`/products/${$route.params.id}`"
+        :url="`/products/${$route.params.brand}`"
       />
     </div>
     <Subscribe />
@@ -22,7 +22,7 @@ const { showList } = useShowList()
 
 const productData = computed(() => productStore.products)
 const singleBrandProduct = computed(() =>
-  productData.value.filter(item => item.brand === (route.params.id || 'agnes'))
+  productData.value.filter(item => item.brand === (route.params.brand || 'agnes'))
 )
 const products = showList(singleBrandProduct)
 const showProducts = computed(() => {
@@ -36,11 +36,4 @@ const showProducts = computed(() => {
 if (productStore.products.length === 0) {
   productStore.getProducts()
 }
-
-onMounted(() => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  })
-})
 </script>
