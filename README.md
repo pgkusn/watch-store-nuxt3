@@ -1,42 +1,15 @@
-# Nuxt 3 Minimal Starter
+# 手錶電商
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+使用 Nuxt3 串接 Firebase REST API
 
-## Setup
+## Website
 
-Make sure to install the dependencies:
+https://watch-store-nuxt3.vercel.app/
 
-```bash
-# yarn
-yarn install
+## Skill
 
-# npm
-npm install
+Nuxt3、Tailwind CSS、Firebase Realtime Database & Auth
 
-# pnpm
-pnpm install
-```
+## Mockup
 
-## Development Server
-
-Start the development server on http://localhost:3000
-
-```bash
-npm run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+https://reurl.cc/dGV2M6
