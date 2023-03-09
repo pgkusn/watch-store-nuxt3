@@ -71,6 +71,7 @@ const postOrder = async () => {
   )
   try {
     await memberStore.createOrder(order)
+    await memberStore.readOrders()
     await mainStore.setAlertMsgHandler('訂購成功')
     productStore.states.cart = []
     orderSuccess.value = true
