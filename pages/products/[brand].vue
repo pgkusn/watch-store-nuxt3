@@ -37,6 +37,14 @@ const showProducts = computed(() => {
   return values
 })
 
+// Scroll to top when page changes
+watch(showProducts, () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  })
+})
+
 if (productStore.products.length === 0) {
   productStore.getProducts()
 }
