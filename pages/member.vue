@@ -30,9 +30,6 @@
 </template>
 
 <script setup>
-import { useMainStore } from '@/stores/main'
-import { useMemberStore } from '@/stores/member'
-
 definePageMeta({
   middleware: 'auth',
 })

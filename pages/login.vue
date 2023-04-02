@@ -52,10 +52,6 @@
 </template>
 
 <script setup>
-import { useMainStore } from '@/stores/main'
-import { useProductStore } from '@/stores/product'
-import { useMemberStore } from '@/stores/member'
-
 useHead({
   title: '登入',
 })

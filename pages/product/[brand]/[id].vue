@@ -84,9 +84,6 @@
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia'
-import { useProductStore } from '@/stores/product'
-
 const route = useRoute()
 const productStore = useProductStore()
 const { formatPrice } = useFormatPrice()

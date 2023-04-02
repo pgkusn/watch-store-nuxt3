@@ -45,9 +45,6 @@
 </template>
 
 <script setup>
-import { useProductStore } from '@/stores/product'
-import { useMemberStore } from '@/stores/member'
-
 const route = useRoute()
 const productStore = useProductStore()
 const memberStore = useMemberStore()

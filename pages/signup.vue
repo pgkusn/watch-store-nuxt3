@@ -141,9 +141,6 @@
 </template>
 
 <script setup>
-import { useMainStore } from '@/stores/main'
-import { useMemberStore } from '@/stores/member'
-
 useHead({
   title: '註冊',
 })

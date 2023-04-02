@@ -23,8 +23,6 @@
 </template>
 
 <script setup>
-import { useMainStore } from '@/stores/main'
-
 const mainStore = useMainStore()
 
 const email = ref('')

@@ -14,8 +14,6 @@
 </template>
 
 <script setup>
-import { useProductStore } from '@/stores/product'
-
 useHead({
   title: '產品',
 })

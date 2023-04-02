@@ -125,8 +125,6 @@
 </template>
 
 <script setup>
-import { useMemberStore } from '@/stores/member'
-
 useHead({
   title: '訂單查詢',
 })

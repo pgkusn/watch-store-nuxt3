@@ -62,9 +62,6 @@
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia'
-import { useProductStore } from '@/stores/product'
-
 defineProps({
   products: {
     type: Array,

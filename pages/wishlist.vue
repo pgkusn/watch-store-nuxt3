@@ -19,8 +19,6 @@
 </template>
 
 <script setup>
-import { useProductStore } from '@/stores/product'
-
 useHead({
   title: '我的收藏',
 })

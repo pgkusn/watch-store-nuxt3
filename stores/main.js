@@ -1,5 +1,3 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
-
 export const useMainStore = defineStore('main', () => {
   const alertMsg = ref('')
 

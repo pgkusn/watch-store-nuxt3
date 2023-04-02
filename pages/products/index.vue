@@ -3,8 +3,6 @@
 </template>
 
 <script setup>
-import { useProductStore } from '@/stores/product'
-
 const router = useRouter()
 const productStore = useProductStore()
 

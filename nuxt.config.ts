@@ -13,6 +13,12 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  imports: {
+    dirs: ['stores'],
+  },
+  pinia: {
+    autoImports: ['defineStore', 'acceptHMRUpdate', 'storeToRefs'],
+  },
   runtimeConfig: {
     public: {
       mockApiUrl: 'http://localhost:4001',

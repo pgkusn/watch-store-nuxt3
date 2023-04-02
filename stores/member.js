@@ -1,6 +1,4 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
 import API from '@/assets/data/api.json'
-import { useProductStore } from '@/stores/product'
 
 export const useMemberStore = defineStore(
   'member',
