@@ -44,7 +44,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 const route = useRoute()
 const productStore = useProductStore()
 const memberStore = useMemberStore()
@@ -57,7 +57,7 @@ const showNav = ref(false)
 const clickHandler = () => {
   showNav.value = false
 }
-const stopPropagation = e => {
+const stopPropagation = (e: Event) => {
   e.stopPropagation()
 }
 

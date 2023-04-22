@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 definePageMeta({
   middleware: 'auth',
 })
@@ -50,7 +50,8 @@ onMounted(async () => {
     try {
       await nextTick()
       await memberStore.readOrders()
-    } catch ({ statusCode, statusMessage }) {
+    } catch (error) {
+      const { statusCode, statusMessage } = error as { statusCode: number; statusMessage: string }
       if (statusCode === 401) {
         await mainStore.setAlertMsgHandler('登入逾時，請重新登入！')
         memberStore.userLogout()

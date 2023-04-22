@@ -140,7 +140,9 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { Profile, SignUpData } from '@/types'
+
 useHead({
   title: '註冊',
 })
@@ -168,7 +170,7 @@ const nextStep = async () => {
 }
 
 // step2
-const profileData = reactive({
+const profileData: Profile = reactive({
   name: '',
   gender: 'male',
   cellPhone: '',
@@ -189,20 +191,25 @@ const profileData = reactive({
   },
 })
 
-const changeCity = (type, { city, area }) => {
+const changeCity = (
+  type: 'contact' | 'delivery',
+  { city, area }: { city: string; area: string }
+) => {
   profileData.address[type].city = city
   profileData.address[type].area = area
 }
 const submitForm = async () => {
   // sign up
-  let signUpData = {}
+  let signUpData = null
   try {
-    signUpData = await memberStore.userSignUp(accountData)
-  } catch ({ statusCode, statusMessage }) {
+    signUpData = (await memberStore.userSignUp(accountData)) as SignUpData
+  } catch (error) {
+    const { statusMessage } = error as { statusCode: number; statusMessage: string }
     await mainStore.setAlertMsgHandler(statusMessage)
     currentStep.value = 1
-    return
   }
+
+  if (!signUpData) return
 
   // create profile & preferences
   try {
@@ -210,7 +217,8 @@ const submitForm = async () => {
     await memberStore.updatePreferences()
     await mainStore.setAlertMsgHandler('註冊成功')
     router.push('/')
-  } catch ({ statusCode, statusMessage }) {
+  } catch (error) {
+    const { statusCode, statusMessage } = error as { statusCode: number; statusMessage: string }
     showError({ statusCode, statusMessage })
   }
 }

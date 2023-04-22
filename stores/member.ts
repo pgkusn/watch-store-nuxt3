@@ -1,4 +1,14 @@
 import API from '@/assets/data/api.json'
+import {
+  OrNull,
+  FetchError,
+  LoginInfo,
+  SignUpData,
+  Profile,
+  RawOrder,
+  Order,
+  NewOrder,
+} from '@/types'
 
 export const useMemberStore = defineStore(
   'member',
@@ -6,14 +16,14 @@ export const useMemberStore = defineStore(
     const runtimeConfig = useRuntimeConfig()
     const productStore = useProductStore()
 
-    const loginInfo = ref(null)
-    const orders = ref([])
-    const profile = ref(null)
+    const loginInfo = ref<OrNull<LoginInfo>>(null)
+    const orders = ref<Order[]>([])
+    const profile = ref<OrNull<Profile>>(null)
 
-    const userLogin = async ({ email, password }) => {
+    const userLogin = async ({ email, password }: { email: string; password: string }) => {
       const { data, error } = await useFetch(API.userLogin.url, {
         baseURL: runtimeConfig.public.authApiUrl,
-        method: API.userLogin.method,
+        method: API.userLogin.method as 'post',
         params: {
           key: runtimeConfig.public.firebaseApiKey,
         },
@@ -25,7 +35,7 @@ export const useMemberStore = defineStore(
       })
 
       if (data.value) {
-        loginInfo.value = data.value
+        loginInfo.value = data.value as LoginInfo
       }
 
       if (error.value) {
@@ -53,10 +63,10 @@ export const useMemberStore = defineStore(
         cart: [],
       }
     }
-    const userSignUp = async ({ email, password }) => {
+    const userSignUp = async ({ email, password }: { email: string; password: string }) => {
       const { data, error } = await useFetch(API.userSignUp.url, {
         baseURL: runtimeConfig.public.authApiUrl,
-        method: API.userSignUp.method,
+        method: API.userSignUp.method as 'post',
         params: {
           key: runtimeConfig.public.firebaseApiKey,
         },
@@ -86,10 +96,10 @@ export const useMemberStore = defineStore(
       return data.value
     }
     const readPreferences = async () => {
-      const { localId, idToken: auth } = loginInfo.value || {}
+      const { localId, idToken: auth } = (loginInfo.value as LoginInfo) || {}
       const { data, error } = await useFetch(API.readPreferences.url.replace(':uid', localId), {
         baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.readPreferences.method,
+        method: API.readPreferences.method as 'get',
         params: { auth },
       })
 
@@ -103,10 +113,10 @@ export const useMemberStore = defineStore(
       return data.value
     }
     const updatePreferences = async () => {
-      const { localId, idToken: auth } = loginInfo.value || {}
+      const { localId, idToken: auth } = (loginInfo.value as LoginInfo) || {}
       const { error } = await useFetch(API.updatePreferences.url.replace(':uid', localId), {
         baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.updatePreferences.method,
+        method: API.updatePreferences.method as 'put',
         params: { auth },
         body: {
           favorite: productStore.states.favorite,
@@ -121,11 +131,11 @@ export const useMemberStore = defineStore(
         })
       }
     }
-    const updatePassword = async password => {
+    const updatePassword = async (password: string) => {
       const { idToken } = loginInfo.value || {}
       const { error } = await useFetch(API.changePassword.url, {
         baseURL: runtimeConfig.public.authApiUrl,
-        method: API.changePassword.method,
+        method: API.changePassword.method as 'post',
         params: {
           key: runtimeConfig.public.firebaseApiKey,
         },
@@ -143,10 +153,10 @@ export const useMemberStore = defineStore(
         })
       }
     }
-    const resetPassword = async email => {
+    const resetPassword = async (email: string) => {
       const { error } = await useFetch(API.resetPassword.url, {
         baseURL: runtimeConfig.public.authApiUrl,
-        method: API.resetPassword.method,
+        method: API.resetPassword.method as 'post',
         params: {
           key: runtimeConfig.public.firebaseApiKey,
         },
@@ -172,11 +182,11 @@ export const useMemberStore = defineStore(
         })
       }
     }
-    const createProfile = async (signUpData, body) => {
+    const createProfile = async (signUpData: SignUpData, body: Profile) => {
       const url = API.updateProfile.url.replace(':uid', signUpData.localId)
       const { error } = await useFetch(url, {
         baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.updateProfile.method,
+        method: API.updateProfile.method as 'put',
         params: {
           auth: signUpData.idToken,
         },
@@ -192,15 +202,15 @@ export const useMemberStore = defineStore(
 
       loginInfo.value = signUpData
     }
-    const updateProfile = async body => {
-      const { localId, idToken: auth, email } = loginInfo.value || {}
+    const updateProfile = async (body: Profile) => {
+      const { localId, idToken: auth, email } = (loginInfo.value as LoginInfo) || {}
       const url = API.updateProfile.url.replace(':uid', localId)
-      const { data, error } = await useFetch(url, {
+      const { data, error } = (await useFetch(url, {
         baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.updateProfile.method,
+        method: API.updateProfile.method as 'put',
         params: { auth },
         body,
-      })
+      })) as { data: Ref<Profile>; error: Ref<FetchError> }
 
       if (error.value) {
         throw createError({
@@ -212,13 +222,13 @@ export const useMemberStore = defineStore(
       profile.value = { email, ...data.value }
     }
     const readProfile = async () => {
-      const { localId, idToken: auth, email } = loginInfo.value || {}
+      const { localId, idToken: auth, email } = (loginInfo.value as LoginInfo) || {}
       const url = API.readProfile.url.replace(':uid', localId)
-      const { data, error } = await useFetch(url, {
+      const { data, error } = (await useFetch(url, {
         baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.readProfile.method,
+        method: API.readProfile.method as 'post',
         params: { auth },
-      })
+      })) as { data: Ref<Profile>; error: Ref<FetchError> }
 
       if (error.value) {
         throw createError({
@@ -229,14 +239,14 @@ export const useMemberStore = defineStore(
 
       profile.value = { email, ...data.value }
     }
-    const createOrder = async body => {
-      const { localId, idToken: auth } = loginInfo.value || {}
+    const createOrder = async (order: NewOrder) => {
+      const { localId, idToken: auth } = (loginInfo.value as LoginInfo) || {}
       const url = API.createOrder.url.replace(':uid', localId)
       const { error } = await useFetch(url, {
         baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.createOrder.method,
+        method: API.createOrder.method as 'post',
         params: { auth },
-        body,
+        body: order,
       })
 
       if (error.value) {
@@ -247,13 +257,13 @@ export const useMemberStore = defineStore(
       }
     }
     const readOrders = async () => {
-      const { localId, idToken: auth } = loginInfo.value || {}
+      const { localId, idToken: auth } = (loginInfo.value as LoginInfo) || {}
       const url = API.readOrders.url.replace(':uid', localId)
-      const { data, error } = await useFetch(url, {
+      const { data, error } = (await useFetch(url, {
         baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.readOrders.method,
+        method: API.readOrders.method as 'get',
         params: { auth },
-      })
+      })) as { data: Ref<RawOrder>; error: Ref<FetchError> }
 
       if (error.value) {
         throw createError({
@@ -262,8 +272,11 @@ export const useMemberStore = defineStore(
         })
       }
 
-      orders.value = Object.keys(data.value).reduce((previousValue, currentValue) => {
-        previousValue.push({ orderID: currentValue, ...data.value[currentValue] })
+      orders.value = Object.keys(data.value).reduce((previousValue: Order[], currentValue) => {
+        previousValue.push({
+          orderID: currentValue,
+          ...data.value[currentValue],
+        } as unknown as Order)
         return previousValue
       }, [])
     }
@@ -294,5 +307,5 @@ export const useMemberStore = defineStore(
 )
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useMemberStore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useMemberStore as any, import.meta.hot))
 }

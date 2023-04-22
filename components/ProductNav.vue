@@ -16,20 +16,21 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  products: {
-    type: Array,
-    default: () => [],
-  },
-  brand: {
-    type: String,
-    default: 'agnes',
-  },
-})
+<script lang="ts" setup>
+import { Products, Brands } from '@/types'
+
+const props = withDefaults(
+  defineProps<{
+    products: Products[]
+    brand: string
+  }>(),
+  {
+    brand: 'agnes',
+  }
+)
 
 const brands = computed(() => {
-  const all = props.products.reduce((previousValue, currentValue) => {
+  const all = props.products.reduce((previousValue: Brands[], currentValue) => {
     previousValue.push({
       brand: currentValue.brand,
       fullBrand: currentValue.fullBrand,

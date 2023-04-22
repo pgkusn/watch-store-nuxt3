@@ -4,8 +4,8 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  error: Object,
-})
+<script lang="ts" setup>
+defineProps<{
+  error: Error
+}>()
 </script>

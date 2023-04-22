@@ -61,10 +61,12 @@
   </div>
 </template>
 
-<script setup>
-defineProps({
+<script lang="ts" setup>
+import { Products } from '@/types'
+
+const props = defineProps({
   products: {
-    type: Array,
+    type: Array as PropType<Products[]>,
     default: () => [],
   },
   tool: {
@@ -88,9 +90,9 @@ const { formatPrice } = useFormatPrice()
 
 const { states } = storeToRefs(productStore)
 
-const inFavorite = id => states.value.favorite.find(item => item.id === id)
-const inCart = id => states.value.cart.find(item => item.id === id)
-const updateState = (name, value) => {
+const inFavorite = (id: string) => states.value.favorite.find(item => item.id === id)
+const inCart = (id: string) => states.value.cart.find(item => item.id === id)
+const updateState = (name: 'favorite' | 'cart', value: Products) => {
   if (name === 'cart') {
     value.amount = 1
   }

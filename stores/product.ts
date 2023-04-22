@@ -1,5 +1,6 @@
 import { cloneDeep } from 'lodash-es'
 import API from '@/assets/data/api.json'
+import { FetchError, RawProducts, Products, Product, States } from '@/types'
 
 export const useProductStore = defineStore(
   'product',
@@ -7,14 +8,14 @@ export const useProductStore = defineStore(
     const runtimeConfig = useRuntimeConfig()
     const memberStore = useMemberStore()
 
-    const products = ref([])
-    const states = ref({
+    const products = ref<Products[]>([])
+    const states = ref<States>({
       favorite: [],
       cart: [],
     })
 
-    const updateState = ({ name, value }) => {
-      const cloneStates = cloneDeep(states.value)
+    const updateState = ({ name, value }: { name: keyof States; value: any }) => {
+      const cloneStates: States = cloneDeep(states.value)
       const index = cloneStates[name].findIndex(item => item.id === value.id)
       if (index === -1) {
         cloneStates[name].push(value)
@@ -25,33 +26,35 @@ export const useProductStore = defineStore(
       states.value = cloneStates
 
       if (memberStore.loginInfo) {
-        memberStore.updatePreferences(cloneStates)
+        memberStore.updatePreferences()
       }
     }
     const getProducts = async () => {
-      const { data, error } = await useFetch(API.products.url, {
+      const { data, error } = (await useFetch(API.products.url, {
         baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.products.method,
-      })
+        method: API.products.method as 'get',
+      })) as { data: Ref<RawProducts>; error: Ref<FetchError> }
 
       if (error.value) {
         showError({
           statusCode: error.value.statusCode,
           statusMessage: error.value.data?.error?.message,
         })
-        return
       }
 
-      products.value = Object.keys(data.value).map(key => ({
-        id: key,
-        ...data.value[key],
-      }))
+      if (data.value) {
+        const result = Object.keys(data.value).map((key: keyof typeof data.value) => ({
+          id: key,
+          ...data.value[key],
+        }))
+        products.value = result as Products[]
+      }
     }
-    const getProduct = async id => {
+    const getProduct = async (id: string) => {
       const url = API.product.url.replace(':id', id)
       const { data, error } = await useFetch(url, {
         baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.product.method,
+        method: API.product.method as 'get',
       })
 
       if (error.value) {
@@ -67,7 +70,7 @@ export const useProductStore = defineStore(
         return
       }
 
-      return { id, ...data.value }
+      return data.value
     }
 
     return {
@@ -86,5 +89,5 @@ export const useProductStore = defineStore(
 )
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useProductStore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useProductStore as any, import.meta.hot))
 }

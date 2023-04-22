@@ -2,14 +2,16 @@
   <div></div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 const router = useRouter()
 const productStore = useProductStore()
 
-if (productStore.products.length === 0) {
+const { products } = storeToRefs(productStore)
+
+if (products.value.length === 0) {
   await productStore.getProducts()
 }
-if (productStore.products.length) {
-  router.replace(`/products/${productStore.products[0].brand}`)
+if (products.value.length) {
+  router.replace(`/products/${products.value[0].brand}`)
 }
 </script>

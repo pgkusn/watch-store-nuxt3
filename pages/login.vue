@@ -33,7 +33,7 @@
         required
       />
       <div class="mt-9 flex items-center">
-        <a href class="mr-auto text-raisin-black" @click.prevent="forgotPassword"> 忘記密碼 </a>
+        <a href="" class="mr-auto text-raisin-black" @click.prevent="forgotPassword"> 忘記密碼 </a>
         <nuxt-link
           to="/signup"
           class="w-[65px] rounded border border-raisin-black text-center leading-[36px] text-raisin-black focus:outline-none"
@@ -51,7 +51,9 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { States } from '@/types'
+
 useHead({
   title: '登入',
 })
@@ -73,7 +75,7 @@ const submitHandler = async () => {
     await memberStore.userLogin(loginData)
 
     // 如 DB 有資料時覆寫 store，否則將 store 狀態存入 DB
-    const preferences = (await memberStore.readPreferences()) || {}
+    const preferences = ((await memberStore.readPreferences()) as States) || {}
     const { favorite = [], cart = [] } = preferences
     if (favorite.length || cart.length) {
       productStore.states.favorite = favorite
@@ -83,8 +85,9 @@ const submitHandler = async () => {
     }
 
     await mainStore.setAlertMsgHandler('登入成功')
-    router.replace(route.query.redirect || '/')
-  } catch ({ statusCode, statusMessage }) {
+    router.replace((route.query.redirect as string) || '/')
+  } catch (error) {
+    const { statusCode, statusMessage } = error as { statusCode: number; statusMessage: string }
     showError({ statusCode, statusMessage })
   }
 }
@@ -101,7 +104,8 @@ const forgotPassword = async () => {
     preConfirm: async email => {
       try {
         return await memberStore.resetPassword(email)
-      } catch ({ statusCode, statusMessage }) {
+      } catch (error) {
+        const { statusMessage } = error as { statusCode: number; statusMessage: string }
         $Swal.showValidationMessage(statusMessage)
       }
     },

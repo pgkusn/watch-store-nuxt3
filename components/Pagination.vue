@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 const props = defineProps({
   pages: {
     type: Number,
@@ -25,7 +25,7 @@ const props = defineProps({
   },
 })
 
-const pageClass = page => {
+const pageClass = (page: number) => {
   const currentPage = Number(props.page)
   const classes = ['block', 'w-5', 'text-center']
   if (currentPage === page) {

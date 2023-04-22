@@ -124,7 +124,9 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { Order } from '@/types'
+
 useHead({
   title: '訂單查詢',
 })
@@ -157,7 +159,7 @@ const orders = computed(() => {
       searchOrderID.value ? item.orderID.includes(searchOrderID.value.trim()) : true
     )
 })
-const showOrders = showList(orders)
+const showOrders = showList(orders.value) as Ref<Order[][]>
 </script>
 
 <style lang="scss" scoped>

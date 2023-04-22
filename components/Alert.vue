@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 defineProps({
   msg: {
     type: String,

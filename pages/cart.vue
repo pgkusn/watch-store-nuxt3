@@ -8,7 +8,7 @@
         :amount="true"
         @removeProduct="removeProduct"
       />
-      <Pagination :pages="products.length" :page="$route.query.page" url="/cart" />
+      <Pagination :pages="products.length" :page="$route.query.page as string" url="/cart" />
       <button
         v-if="products.length"
         class="mx-auto mt-10 block h-[38px] w-[160px] rounded bg-raisin-black text-white focus:outline-none md:mt-15"
@@ -26,7 +26,9 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { Products, Product, NewOrder, NewOrderContent } from '@/types'
+
 useHead({
   title: '購物車',
 })
@@ -38,16 +40,18 @@ const productStore = useProductStore()
 const memberStore = useMemberStore()
 const { showList } = useShowList()
 
-const allProducts = computed(() => productStore.states.cart)
-const products = showList(allProducts)
-const showProducts = computed(() =>
-  route.query.page ? products.value[route.query.page - 1] : products.value[0]
-)
+const allProducts = computed<Products[]>(() => productStore.states.cart)
+const products = showList(allProducts.value) as Ref<Products[][]>
+const showProducts = computed(() => {
+  const page = Number(route.query.page)
+  return page ? products.value[page - 1] : products.value[0]
+})
 const orderSuccess = ref(false)
 
-const removeProduct = product => {
+const removeProduct = (product: Product) => {
+  const page = Number(route.query.page)
   productStore.updateState({ name: 'cart', value: product })
-  if (!showProducts && route.query.page > 1) {
+  if (!showProducts && page > 1) {
     router.replace('/cart')
   }
 }
@@ -57,13 +61,16 @@ const postOrder = async () => {
     return
   }
   const order = allProducts.value.reduce(
-    (previousValue, currentValue) => {
-      previousValue.content.push({ name: currentValue.fullBrand, amount: currentValue.amount })
-      previousValue.total += currentValue.price
+    (previousValue: NewOrder, currentValue) => {
+      previousValue.content.push({
+        name: currentValue.fullBrand,
+        amount: currentValue.amount,
+      } as NewOrderContent)
+      previousValue.total += currentValue.price as number
       previousValue.createTime = new Date().getTime()
       return previousValue
     },
-    { content: [], total: 0 }
+    { content: [], total: 0, createTime: 0 }
   )
   try {
     await memberStore.createOrder(order)
@@ -71,7 +78,8 @@ const postOrder = async () => {
     await mainStore.setAlertMsgHandler('訂購成功')
     productStore.states.cart = []
     orderSuccess.value = true
-  } catch ({ statusCode, statusMessage }) {
+  } catch (error) {
+    const { statusCode, statusMessage } = error as { statusCode: number; statusMessage: string }
     if (statusCode === 401) {
       await mainStore.setAlertMsgHandler('登入逾時，請重新登入！')
       memberStore.userLogout()

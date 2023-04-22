@@ -16,7 +16,7 @@
   </footer>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useMediaQuery } from '@vueuse/core'
 
 const isSmallScreen = useMediaQuery('(min-width: 640px)')

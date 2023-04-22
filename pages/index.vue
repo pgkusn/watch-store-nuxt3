@@ -209,7 +209,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useMediaQuery } from '@vueuse/core'
 
 const isMediumScreen = useMediaQuery('(min-width: 768px)')

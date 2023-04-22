@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ProductNav :products="productData" :brand="$route.params.brand" />
+    <ProductNav :products="productData" :brand="$route.params.brand as string" />
     <div
       v-if="product"
       class="container grid grid-rows-[repeat(5,auto)] gap-[30px] py-10 md:grid-cols-3 md:grid-rows-[repeat(3,auto)] md:py-15"
@@ -27,7 +27,7 @@
               <select
                 v-model="amountComputed"
                 class="h-full w-full appearance-none rounded-l rounded-r-none border border-raisin-black pl-4 focus:outline-none"
-                :disabled="inCart"
+                :disabled="inCart ? true : false"
               >
                 <option v-for="n in 10" :key="n" :value="n">
                   {{ n }}
@@ -83,17 +83,19 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { OrNull, Product, States } from '@/types'
+
 const route = useRoute()
 const productStore = useProductStore()
 const { formatPrice } = useFormatPrice()
 
 const { states } = storeToRefs(productStore)
-const product = ref(null)
+const product = ref<OrNull<Product>>(null)
 const productData = computed(() => productStore.products)
 
 useHead({
-  title: computed(() => product.value?.name),
+  title: computed(() => product.value?.name as string),
 })
 
 const amount = ref(1)
@@ -106,20 +108,19 @@ const amountComputed = computed({
   },
 })
 
-const inFavorite = computed(() => states.value.favorite.find(item => item.id === product.value.id))
-const inCart = computed(() => states.value.cart.find(item => item.id === product.value.id))
+const inFavorite = computed(() => states.value.favorite.find(item => item.id === product.value?.id))
+const inCart = computed(() => states.value.cart.find(item => item.id === product.value?.id))
 
-const updateState = name => {
-  const value = productData.value.find(item => item.id === product.value.id)
-  value.amount = amount.value
-  productStore.updateState({ name, value })
+const updateState = (name: keyof States) => {
+  const currentProduct = productData.value.find(item => item.id === product.value?.id)
+  productStore.updateState({ name, value: { ...currentProduct, amount: amount.value } })
 }
 
 if (productStore.products.length === 0) {
   await productStore.getProducts()
 }
 
-product.value = await productStore.getProduct(route.params.id)
+product.value = (await productStore.getProduct(route.params.id as string)) as Product
 </script>
 
 <style lang="scss" scoped>

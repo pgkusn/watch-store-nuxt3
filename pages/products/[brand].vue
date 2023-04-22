@@ -1,11 +1,11 @@
 <template>
   <div>
-    <ProductNav :products="productData" :brand="$route.params.brand" />
+    <ProductNav :products="productData" :brand="($route.params.brand as string)" />
     <div class="container py-10 md:py-15">
       <ProductList :products="showProducts" />
       <Pagination
         :pages="products.length"
-        :page="$route.query.page"
+        :page="($route.query.page as string)"
         :url="`/products/${$route.params.brand}`"
       />
     </div>
@@ -13,7 +13,9 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { Products } from '@/types'
+
 useHead({
   title: '產品',
 })
@@ -22,13 +24,18 @@ const route = useRoute()
 const productStore = useProductStore()
 const { showList } = useShowList()
 
+if (productStore.products.length === 0) {
+  await productStore.getProducts()
+}
+
 const productData = computed(() => productStore.products)
 const singleBrandProduct = computed(() =>
   productData.value.filter(item => item.brand === (route.params.brand || 'agnes'))
 )
-const products = showList(singleBrandProduct)
+const products = showList(singleBrandProduct.value) as Ref<Products[][]>
 const showProducts = computed(() => {
-  const values = route.query.page ? products.value[route.query.page - 1] : products.value[0]
+  const page = Number(route.query.page)
+  const values = products.value[page ? page - 1 : 0]
   if (!values) {
     showError({ statusCode: 404, statusMessage: 'Page Not Found' })
   }
@@ -37,13 +44,6 @@ const showProducts = computed(() => {
 
 // Scroll to top when page changes
 watch(showProducts, () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  })
+  window.scrollTo({ top: 0 })
 })
-
-if (productStore.products.length === 0) {
-  productStore.getProducts()
-}
 </script>

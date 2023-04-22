@@ -184,7 +184,9 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { Profile, LoginInfo, Order, Password } from '@/types'
+
 useHead({
   title: '會員資料修改',
 })
@@ -194,14 +196,17 @@ const mainStore = useMainStore()
 const memberStore = useMemberStore()
 const productStore = useProductStore()
 
+const { loginInfo, orders, profile } = storeToRefs(memberStore) as {
+  loginInfo: Ref<LoginInfo>
+  orders: Ref<Order[]>
+  profile: Ref<Profile>
+}
 const cart = computed(() => productStore.states.cart)
 const favorite = computed(() => productStore.states.favorite)
-const memberID = computed(() => memberStore.loginInfo?.localId.slice(0, 13))
-const orders = computed(() => memberStore.orders)
-const profile = computed(() => memberStore.profile)
+const memberID = computed(() => loginInfo.value.localId.slice(0, 13))
 
 // 修改個人資料
-const profileData = reactive({
+const profileData = ref<Profile>({
   email: '',
   name: '',
   gender: 'male',
@@ -222,15 +227,19 @@ const profileData = reactive({
     },
   },
 })
-const changeCity = (type, { city, area }) => {
-  profileData.address[type].city = city
-  profileData.address[type].area = area
+const changeCity = (
+  type: 'contact' | 'delivery',
+  { city, area }: { city: string; area: string }
+) => {
+  profileData.value.address[type].city = city
+  profileData.value.address[type].area = area
 }
 const updateProfile = async () => {
   try {
-    await memberStore.updateProfile(profileData)
+    await memberStore.updateProfile(profileData.value)
     mainStore.setAlertMsgHandler('個人資料修改成功')
-  } catch ({ statusCode, statusMessage }) {
+  } catch (error) {
+    const { statusCode, statusMessage } = error as { statusCode: number; statusMessage: string }
     if (statusCode === 401) {
       await mainStore.setAlertMsgHandler('登入逾時，請重新登入！')
       memberStore.userLogout()
@@ -242,15 +251,15 @@ const updateProfile = async () => {
 }
 
 // 修改密碼
-const passwordInput = ref(null)
-const password = reactive({
+const passwordInput = ref<HTMLInputElement | null>(null)
+const password = ref<Password>({
   oldPassword: '',
   newPassword: '',
   confirmPassword: '',
 })
 const updatePassword = async () => {
   // confirm password
-  if (password.newPassword !== password.confirmPassword) {
+  if (password.value.newPassword !== password.value.confirmPassword) {
     await mainStore.setAlertMsgHandler('密碼不一致')
     resetPasswordInput()
     return
@@ -259,10 +268,11 @@ const updatePassword = async () => {
   // check old password
   try {
     await memberStore.userLogin({
-      email: memberStore.loginInfo.email,
-      password: password.oldPassword,
+      email: loginInfo.value.email,
+      password: password.value.oldPassword,
     })
-  } catch ({ statusCode, statusMessage }) {
+  } catch (error) {
+    const { statusCode, statusMessage } = error as { statusCode: number; statusMessage: string }
     if (statusCode === 401) {
       await mainStore.setAlertMsgHandler('登入逾時，請重新登入！')
       memberStore.userLogout()
@@ -276,19 +286,20 @@ const updatePassword = async () => {
 
   // update password
   try {
-    await memberStore.updatePassword(password.newPassword)
+    await memberStore.updatePassword(password.value.newPassword)
     await mainStore.setAlertMsgHandler('密碼修改成功，請重新登入。')
     memberStore.userLogout()
     router.replace('/login')
-  } catch ({ statusCode, statusMessage }) {
+  } catch (error) {
+    const { statusCode, statusMessage } = error as { statusCode: number; statusMessage: string }
     showError({ statusCode, statusMessage })
   }
 }
 const resetPasswordInput = () => {
-  for (const value of Object.keys(password)) {
-    password[value] = ''
+  for (const value of Object.keys(password.value) as (keyof Password)[]) {
+    password.value[value] = ''
   }
-  passwordInput.value.focus()
+  passwordInput.value?.focus()
 }
 
 onMounted(async () => {
@@ -297,10 +308,9 @@ onMounted(async () => {
       await nextTick()
       await memberStore.readProfile()
     }
-    for (const value of Object.keys(profileData)) {
-      profileData[value] = profile.value[value]
-    }
-  } catch ({ statusCode, statusMessage }) {
+    profileData.value = profile.value
+  } catch (error) {
+    const { statusCode, statusMessage } = error as { statusCode: number; statusMessage: string }
     if (statusCode === 401) {
       await mainStore.setAlertMsgHandler('登入逾時，請重新登入！')
       memberStore.userLogout()

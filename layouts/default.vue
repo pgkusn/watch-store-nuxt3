@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 const mainStore = useMainStore()
 </script>
 

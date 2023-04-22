@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import cityData from '@/assets/data/city.json'
 
 const props = defineProps({

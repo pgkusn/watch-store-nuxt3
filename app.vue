@@ -2,14 +2,14 @@
   <NuxtLayout>
     <!-- transition issue solution (https://github.com/nuxt/nuxt/issues/13350#issuecomment-1397297975) -->
     <Transition name="page" mode="out-in">
-      <div :key="$route.name">
+      <div :key="($route.name as string)">
         <NuxtPage />
       </div>
     </Transition>
   </NuxtLayout>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 useHead({
   titleTemplate: titleChunk => {
     return titleChunk ? `${titleChunk} - Watch Store` : 'Watch Store'

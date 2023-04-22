@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 const mainStore = useMainStore()
 
 const email = ref('')

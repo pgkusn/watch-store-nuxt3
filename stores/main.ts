@@ -1,7 +1,7 @@
 export const useMainStore = defineStore('main', () => {
   const alertMsg = ref('')
 
-  const setAlertMsgHandler = msg => {
+  const setAlertMsgHandler = (msg: string): Promise<void> => {
     return new Promise(resolve => {
       alertMsg.value = msg
       setTimeout(() => {
@@ -18,5 +18,5 @@ export const useMainStore = defineStore('main', () => {
 })
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useMainStore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useMainStore as any, import.meta.hot))
 }

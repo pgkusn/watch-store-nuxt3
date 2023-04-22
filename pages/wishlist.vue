@@ -7,7 +7,7 @@
         :trash="true"
         @removeProduct="removeProduct"
       />
-      <Pagination :pages="products.length" :page="$route.query.page" url="/wishlist" />
+      <Pagination :pages="products.length" :page="$route.query.page as string" url="/wishlist" />
     </div>
     <div
       v-else
@@ -18,7 +18,9 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { Products } from '@/types'
+
 useHead({
   title: '我的收藏',
 })
@@ -29,14 +31,16 @@ const productStore = useProductStore()
 const { showList } = useShowList()
 
 const allProducts = computed(() => productStore.states.favorite)
-const products = showList(allProducts)
-const showProducts = computed(() =>
-  route.query.page ? products.value[route.query.page - 1] : products.value[0]
-)
+const products = showList(allProducts.value) as Ref<Products[][]>
+const showProducts = computed(() => {
+  const page = Number(route.query.page)
+  return products.value[page ? page - 1 : 0]
+})
 
-const removeProduct = product => {
+const removeProduct = (product: Products) => {
   productStore.updateState({ name: 'favorite', value: product })
-  if (!showProducts.value && route.query.page > 1) {
+  const page = Number(route.query.page)
+  if (!showProducts.value && page > 1) {
     router.replace('/wishlist')
   }
 }
