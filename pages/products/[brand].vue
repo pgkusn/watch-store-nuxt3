@@ -17,7 +17,7 @@
 import { Products } from '@/types'
 
 useHead({
-  title: '產品',
+  title: 'Product',
 })
 
 const route = useRoute()

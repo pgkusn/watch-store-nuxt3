@@ -30,7 +30,7 @@
 import { Products, Product, NewOrder, NewOrderContent } from '@/types'
 
 useHead({
-  title: '購物車',
+  title: 'Cart',
 })
 
 const router = useRouter()

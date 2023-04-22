@@ -128,7 +128,7 @@
 import { Order } from '@/types'
 
 useHead({
-  title: '訂單查詢',
+  title: 'Mypage',
 })
 
 const memberStore = useMemberStore()

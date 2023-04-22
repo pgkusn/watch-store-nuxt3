@@ -188,7 +188,7 @@
 import { Profile, LoginInfo, Order, Password } from '@/types'
 
 useHead({
-  title: '會員資料修改',
+  title: 'Mypage',
 })
 
 const router = useRouter()

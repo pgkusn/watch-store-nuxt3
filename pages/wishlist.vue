@@ -22,7 +22,7 @@
 import { Products } from '@/types'
 
 useHead({
-  title: '我的收藏',
+  title: 'Wishlist',
 })
 
 const router = useRouter()

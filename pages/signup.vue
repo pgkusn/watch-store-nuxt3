@@ -144,7 +144,7 @@
 import { Profile, SignUpData } from '@/types'
 
 useHead({
-  title: '註冊',
+  title: 'Sign up',
 })
 
 const router = useRouter()

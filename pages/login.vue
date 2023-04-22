@@ -55,7 +55,7 @@
 import { States } from '@/types'
 
 useHead({
-  title: '登入',
+  title: 'Log in',
 })
 
 const router = useRouter()
