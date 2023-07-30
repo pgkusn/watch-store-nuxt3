@@ -21,25 +21,26 @@ export const useMemberStore = defineStore(
     const profile = ref<OrNull<Profile>>(null)
 
     const userLogin = async ({ email, password }: { email: string; password: string }) => {
-      const { data, error } = await useFetch(API.userLogin.url, {
-        baseURL: runtimeConfig.public.authApiUrl,
-        method: API.userLogin.method as 'post',
-        params: {
-          key: runtimeConfig.public.firebaseApiKey,
-        },
-        body: {
-          email,
-          password,
-          returnSecureToken: true,
-        },
-      })
-
-      if (data.value) {
-        loginInfo.value = data.value as LoginInfo
-      }
-
-      if (error.value) {
-        let statusMessage = error.value.data?.error?.message
+      try {
+        const result = await $fetch(API.userLogin.url, {
+          baseURL: runtimeConfig.public.authApiUrl,
+          method: API.userLogin.method as 'post',
+          query: {
+            key: runtimeConfig.public.firebaseApiKey,
+          },
+          body: {
+            email,
+            password,
+            returnSecureToken: true,
+          },
+        })
+        loginInfo.value = result as LoginInfo
+      } catch (error) {
+        const { statusCode, data } = error as {
+          statusCode: number
+          data: { error: { message: string } }
+        }
+        let statusMessage = data?.error?.message
         switch (statusMessage) {
           case 'EMAIL_NOT_FOUND':
             statusMessage = 'Email 不存在'
@@ -49,7 +50,7 @@ export const useMemberStore = defineStore(
             break
         }
         throw createError({
-          statusCode: error.value.statusCode,
+          statusCode,
           statusMessage,
         })
       }
@@ -64,21 +65,25 @@ export const useMemberStore = defineStore(
       }
     }
     const userSignUp = async ({ email, password }: { email: string; password: string }) => {
-      const { data, error } = await useFetch(API.userSignUp.url, {
-        baseURL: runtimeConfig.public.authApiUrl,
-        method: API.userSignUp.method as 'post',
-        params: {
-          key: runtimeConfig.public.firebaseApiKey,
-        },
-        body: {
-          email,
-          password,
-          returnSecureToken: true,
-        },
-      })
-
-      if (error.value) {
-        let statusMessage = error.value.data?.error?.message
+      try {
+        return await $fetch(API.userSignUp.url, {
+          baseURL: runtimeConfig.public.authApiUrl,
+          method: API.userSignUp.method as 'post',
+          query: {
+            key: runtimeConfig.public.firebaseApiKey,
+          },
+          body: {
+            email,
+            password,
+            returnSecureToken: true,
+          },
+        })
+      } catch (error) {
+        const { statusCode, data } = error as {
+          statusCode: number
+          data: { error: { message: string } }
+        }
+        let statusMessage = data?.error?.message
         switch (statusMessage) {
           case 'EMAIL_EXISTS':
             statusMessage = 'Email 重複'
@@ -88,86 +93,98 @@ export const useMemberStore = defineStore(
             break
         }
         throw createError({
-          statusCode: error.value.statusCode,
+          statusCode,
           statusMessage,
         })
       }
-
-      return data.value
     }
     const readPreferences = async () => {
       const { localId, idToken: auth } = (loginInfo.value as LoginInfo) || {}
-      const { data, error } = await useFetch(API.readPreferences.url.replace(':uid', localId), {
-        baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.readPreferences.method as 'get',
-        params: { auth },
-      })
-
-      if (error.value) {
+      try {
+        return await $fetch(API.readPreferences.url.replace(':uid', localId), {
+          baseURL: runtimeConfig.public.dbApiUrl,
+          method: API.readPreferences.method as 'get',
+          query: { auth },
+        })
+      } catch (error) {
+        const { statusCode, data } = error as {
+          statusCode: number
+          data: { error: { message: string } }
+        }
         throw createError({
-          statusCode: error.value.statusCode,
-          statusMessage: error.value.data?.error?.message,
+          statusCode,
+          statusMessage: data?.error?.message,
         })
       }
-
-      return data.value
     }
     const updatePreferences = async () => {
       const { localId, idToken: auth } = (loginInfo.value as LoginInfo) || {}
-      const { error } = await useFetch(API.updatePreferences.url.replace(':uid', localId), {
-        baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.updatePreferences.method as 'put',
-        params: { auth },
-        body: {
-          favorite: productStore.states.favorite,
-          cart: productStore.states.cart,
-        },
-      })
-
-      if (error.value) {
+      try {
+        await $fetch(API.updatePreferences.url.replace(':uid', localId), {
+          baseURL: runtimeConfig.public.dbApiUrl,
+          method: API.updatePreferences.method as 'put',
+          query: { auth },
+          body: {
+            favorite: productStore.states.favorite,
+            cart: productStore.states.cart,
+          },
+        })
+      } catch (error) {
+        const { statusCode, data } = error as {
+          statusCode: number
+          data: { error: { message: string } }
+        }
         throw createError({
-          statusCode: error.value.statusCode,
-          statusMessage: error.value.data?.error?.message,
+          statusCode,
+          statusMessage: data?.error?.message,
         })
       }
     }
     const updatePassword = async (password: string) => {
       const { idToken } = loginInfo.value || {}
-      const { error } = await useFetch(API.changePassword.url, {
-        baseURL: runtimeConfig.public.authApiUrl,
-        method: API.changePassword.method as 'post',
-        params: {
-          key: runtimeConfig.public.firebaseApiKey,
-        },
-        body: {
-          idToken,
-          password,
-          returnSecureToken: true,
-        },
-      })
-
-      if (error.value) {
+      try {
+        await $fetch(API.changePassword.url, {
+          baseURL: runtimeConfig.public.authApiUrl,
+          method: API.changePassword.method as 'post',
+          query: {
+            key: runtimeConfig.public.firebaseApiKey,
+          },
+          body: {
+            idToken,
+            password,
+            returnSecureToken: true,
+          },
+        })
+      } catch (error) {
+        const { statusCode, data } = error as {
+          statusCode: number
+          data: { error: { message: string } }
+        }
         throw createError({
-          statusCode: error.value.statusCode,
-          statusMessage: error.value.data?.error?.message,
+          statusCode,
+          statusMessage: data?.error?.message,
         })
       }
     }
     const resetPassword = async (email: string) => {
-      const { error } = await useFetch(API.resetPassword.url, {
-        baseURL: runtimeConfig.public.authApiUrl,
-        method: API.resetPassword.method as 'post',
-        params: {
-          key: runtimeConfig.public.firebaseApiKey,
-        },
-        body: {
-          requestType: 'PASSWORD_RESET',
-          email,
-        },
-      })
-
-      if (error.value) {
-        let statusMessage = error.value.data?.error?.message
+      try {
+        await $fetch(API.resetPassword.url, {
+          baseURL: runtimeConfig.public.authApiUrl,
+          method: API.resetPassword.method as 'post',
+          query: {
+            key: runtimeConfig.public.firebaseApiKey,
+          },
+          body: {
+            requestType: 'PASSWORD_RESET',
+            email,
+          },
+        })
+      } catch (error) {
+        const { statusCode, data } = error as {
+          statusCode: number
+          data: { error: { message: string } }
+        }
+        let statusMessage = data?.error?.message
         switch (statusMessage) {
           case 'EMAIL_NOT_FOUND':
             statusMessage = '查無此信箱'
@@ -177,108 +194,124 @@ export const useMemberStore = defineStore(
             break
         }
         throw createError({
-          statusCode: error.value.statusCode,
+          statusCode,
           statusMessage,
         })
       }
     }
     const createProfile = async (signUpData: SignUpData, body: Profile) => {
       const url = API.updateProfile.url.replace(':uid', signUpData.localId)
-      const { error } = await useFetch(url, {
-        baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.updateProfile.method as 'put',
-        params: {
-          auth: signUpData.idToken,
-        },
-        body,
-      })
-
-      if (error.value) {
+      try {
+        await $fetch(url, {
+          baseURL: runtimeConfig.public.dbApiUrl,
+          method: API.updateProfile.method as 'put',
+          query: {
+            auth: signUpData.idToken,
+          },
+          body,
+        })
+        loginInfo.value = signUpData
+      } catch (error) {
+        const { statusCode, data } = error as {
+          statusCode: number
+          data: { error: { message: string } }
+        }
         throw createError({
-          statusCode: error.value.statusCode,
-          statusMessage: error.value.data?.error?.message,
+          statusCode,
+          statusMessage: data?.error?.message,
         })
       }
-
-      loginInfo.value = signUpData
     }
     const updateProfile = async (body: Profile) => {
       const { localId, idToken: auth, email } = (loginInfo.value as LoginInfo) || {}
-      const url = API.updateProfile.url.replace(':uid', localId)
-      const { data, error } = (await useFetch(url, {
-        baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.updateProfile.method as 'put',
-        params: { auth },
-        body,
-      })) as { data: Ref<Profile>; error: Ref<FetchError> }
-
-      if (error.value) {
+      try {
+        const url = API.updateProfile.url.replace(':uid', localId)
+        const result = (await $fetch(url, {
+          baseURL: runtimeConfig.public.dbApiUrl,
+          method: API.updateProfile.method as 'put',
+          query: { auth },
+          body,
+        })) as Profile
+        profile.value = { email, ...result }
+      } catch (error) {
+        const { statusCode, data } = error as {
+          statusCode: number
+          data: { error: { message: string } }
+        }
         throw createError({
-          statusCode: error.value.statusCode,
-          statusMessage: error.value.data?.error?.message,
+          statusCode,
+          statusMessage: data?.error?.message,
         })
       }
-
-      profile.value = { email, ...data.value }
     }
     const readProfile = async () => {
       const { localId, idToken: auth, email } = (loginInfo.value as LoginInfo) || {}
       const url = API.readProfile.url.replace(':uid', localId)
-      const { data, error } = (await useFetch(url, {
-        baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.readProfile.method as 'post',
-        params: { auth },
-      })) as { data: Ref<Profile>; error: Ref<FetchError> }
-
-      if (error.value) {
+      try {
+        const result = (await $fetch(url, {
+          baseURL: runtimeConfig.public.dbApiUrl,
+          method: API.readProfile.method as 'post',
+          query: { auth },
+        })) as Profile
+        profile.value = { email, ...result }
+      } catch (error) {
+        const { statusCode, data } = error as {
+          statusCode: number
+          data: { error: { message: string } }
+        }
         throw createError({
-          statusCode: error.value.statusCode,
-          statusMessage: error.value.data?.error?.message,
+          statusCode,
+          statusMessage: data?.error?.message,
         })
       }
-
-      profile.value = { email, ...data.value }
     }
     const createOrder = async (order: NewOrder) => {
       const { localId, idToken: auth } = (loginInfo.value as LoginInfo) || {}
       const url = API.createOrder.url.replace(':uid', localId)
-      const { error } = await useFetch(url, {
-        baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.createOrder.method as 'post',
-        params: { auth },
-        body: order,
-      })
-
-      if (error.value) {
+      try {
+        await $fetch(url, {
+          baseURL: runtimeConfig.public.dbApiUrl,
+          method: API.createOrder.method as 'post',
+          query: { auth },
+          body: order,
+        })
+      } catch (error) {
+        const { statusCode, data } = error as {
+          statusCode: number
+          data: { error: { message: string } }
+        }
         throw createError({
-          statusCode: error.value.statusCode,
-          statusMessage: error.value.data?.error?.message,
+          statusCode,
+          statusMessage: data?.error?.message,
         })
       }
     }
     const readOrders = async () => {
       const { localId, idToken: auth } = (loginInfo.value as LoginInfo) || {}
       const url = API.readOrders.url.replace(':uid', localId)
-      const { data, error } = (await useFetch(url, {
-        baseURL: runtimeConfig.public.dbApiUrl,
-        method: API.readOrders.method as 'get',
-        params: { auth },
-      })) as { data: Ref<RawOrder>; error: Ref<FetchError> }
-
-      if (error.value) {
+      try {
+        const result = (await $fetch(url, {
+          baseURL: runtimeConfig.public.dbApiUrl,
+          method: API.readOrders.method as 'get',
+          query: { auth },
+        })) as RawOrder
+        orders.value = Object.keys(result).reduce((previousValue: Order[], currentValue) => {
+          previousValue.push({
+            orderID: currentValue,
+            ...result[currentValue],
+          } as unknown as Order)
+          return previousValue
+        }, [])
+      } catch (error) {
+        const { statusCode, data } = error as {
+          statusCode: number
+          data: { error: { message: string } }
+        }
         throw createError({
-          statusCode: error.value.statusCode,
-          statusMessage: error.value.data?.error?.message,
+          statusCode,
+          statusMessage: data?.error?.message,
         })
       }
-
-      orders.value = Object.keys(data.value).reduce((previousValue: Order[], currentValue) => {
-        previousValue.push({
-          orderID: currentValue,
-          ...data.value[currentValue],
-        } as unknown as Order)
-        return previousValue
-      }, [])
     }
 
     return {

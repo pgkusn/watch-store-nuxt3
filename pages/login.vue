@@ -87,8 +87,8 @@ const submitHandler = async () => {
     await mainStore.setAlertMsgHandler('登入成功')
     router.replace((route.query.redirect as string) || '/')
   } catch (error) {
-    const { statusCode, statusMessage } = error as { statusCode: number; statusMessage: string }
-    showError({ statusCode, statusMessage })
+    const { statusMessage } = error as { statusCode: number; statusMessage: string }
+    mainStore.setAlertMsgHandler(statusMessage)
   }
 }
 const forgotPassword = async () => {

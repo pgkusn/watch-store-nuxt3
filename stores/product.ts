@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash-es'
 import API from '@/assets/data/api.json'
-import { FetchError, RawProducts, Products, Product, States } from '@/types'
+import { FetchError, RawProducts, Products, States } from '@/types'
 
 export const useProductStore = defineStore(
   'product',
