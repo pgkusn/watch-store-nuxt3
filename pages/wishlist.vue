@@ -30,8 +30,8 @@ const route = useRoute()
 const productStore = useProductStore()
 const { showList } = useShowList()
 
-const allProducts = computed(() => productStore.states.favorite)
-const products = showList(allProducts.value) as Ref<Products[][]>
+const allProducts = computed<Products[]>(() => productStore.states.favorite)
+const products = showList(allProducts) as Ref<Products[][]>
 const showProducts = computed(() => {
   const page = Number(route.query.page)
   return products.value[page ? page - 1 : 0]

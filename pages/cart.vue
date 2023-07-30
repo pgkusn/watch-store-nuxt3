@@ -41,7 +41,7 @@ const memberStore = useMemberStore()
 const { showList } = useShowList()
 
 const allProducts = computed<Products[]>(() => productStore.states.cart)
-const products = showList(allProducts.value) as Ref<Products[][]>
+const products = showList(allProducts) as Ref<Products[][]>
 const showProducts = computed(() => {
   const page = Number(route.query.page)
   return page ? products.value[page - 1] : products.value[0]

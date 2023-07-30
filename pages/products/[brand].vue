@@ -32,7 +32,7 @@ const productData = computed(() => productStore.products)
 const singleBrandProduct = computed(() =>
   productData.value.filter(item => item.brand === (route.params.brand || 'agnes'))
 )
-const products = showList(singleBrandProduct.value) as Ref<Products[][]>
+const products = showList(singleBrandProduct) as Ref<Products[][]>
 const showProducts = computed(() => {
   const page = Number(route.query.page)
   const values = products.value[page ? page - 1 : 0]

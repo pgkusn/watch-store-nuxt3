@@ -1,11 +1,11 @@
 import { Products, Order } from '@/types'
 
 export default () => {
-  const showList = (list: unknown[]) => {
+  const showList = (list: Ref<Products[] | Order[]>) => {
     const perPage = 8
     return computed(() => {
       const newList: unknown[][] = []
-      list.forEach((item, i) => {
+      list.value.forEach((item, i) => {
         if (i % perPage === 0) {
           newList.push([])
         }

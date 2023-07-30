@@ -158,8 +158,8 @@ const orders = computed(() => {
     .filter(item =>
       searchOrderID.value ? item.orderID.includes(searchOrderID.value.trim()) : true
     )
-})
-const showOrders = showList(orders.value) as Ref<Order[][]>
+}) as unknown as Ref<Order[]>
+const showOrders = showList(orders) as Ref<Order[][]>
 </script>
 
 <style lang="scss" scoped>
