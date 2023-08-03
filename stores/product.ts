@@ -70,7 +70,7 @@ export const useProductStore = defineStore(
         return
       }
 
-      return data.value
+      return { id, ...data.value }
     }
 
     return {
