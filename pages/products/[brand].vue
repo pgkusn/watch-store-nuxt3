@@ -1,13 +1,9 @@
 <template>
   <div>
-    <ProductNav :products="productData" :brand="($route.params.brand as string)" />
+    <ProductNav :products="productData" :brand="brand" />
     <div class="container py-10 md:py-15">
       <ProductList :products="showProducts" />
-      <Pagination
-        :pages="products.length"
-        :page="($route.query.page as string)"
-        :url="`/products/${$route.params.brand}`"
-      />
+      <Pagination :pages="products.length" :page="page" :url="`/products/${$route.params.brand}`" />
     </div>
     <Subscribe />
   </div>
@@ -16,13 +12,13 @@
 <script lang="ts" setup>
 import { Products } from '@/types'
 
-useHead({
-  title: 'Product',
-})
-
+useHead({ title: 'Product' })
+const { $gsap } = useNuxtApp()
 const route = useRoute()
 const productStore = useProductStore()
-const { showList } = useShowList()
+
+const brand = computed(() => route.params.brand as string)
+const page = computed(() => route.params.page as string)
 
 if (productStore.products.length === 0) {
   await productStore.getProducts()
@@ -32,7 +28,7 @@ const productData = computed(() => productStore.products)
 const singleBrandProduct = computed(() =>
   productData.value.filter(item => item.brand === (route.params.brand || 'agnes'))
 )
-const products = showList(singleBrandProduct) as Ref<Products[][]>
+const products = useShowList(singleBrandProduct) as Ref<Products[][]>
 const showProducts = computed(() => {
   const page = Number(route.query.page)
   const values = products.value[page ? page - 1 : 0]
@@ -43,7 +39,14 @@ const showProducts = computed(() => {
 })
 
 // Scroll to top when page changes
-watch(showProducts, () => {
-  window.scrollTo({ top: 0 })
-})
+watch(
+  () => route.query.page,
+  () => {
+    $gsap.to(window, {
+      duration: 0.5,
+      scrollTo: '#header',
+      ease: 'Power1.easeOut',
+    })
+  }
+)
 </script>

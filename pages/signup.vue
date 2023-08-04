@@ -143,10 +143,7 @@
 <script lang="ts" setup>
 import { Profile, SignUpData } from '@/types'
 
-useHead({
-  title: 'Sign up',
-})
-
+useHead({ title: 'Sign up' })
 const router = useRouter()
 const mainStore = useMainStore()
 const memberStore = useMemberStore()

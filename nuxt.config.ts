@@ -3,21 +3,23 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxt/devtools',
-    '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
+    [
+      '@pinia/nuxt',
+      {
+        autoImports: ['defineStore', 'acceptHMRUpdate', 'storeToRefs'],
+      },
+    ],
   ],
+  imports: {
+    dirs: ['stores'],
+  },
   postcss: {
     plugins: {
       'tailwindcss/nesting': {},
       tailwindcss: {},
       autoprefixer: {},
     },
-  },
-  imports: {
-    dirs: ['stores'],
-  },
-  pinia: {
-    autoImports: ['defineStore', 'acceptHMRUpdate', 'storeToRefs'],
   },
   runtimeConfig: {
     public: {

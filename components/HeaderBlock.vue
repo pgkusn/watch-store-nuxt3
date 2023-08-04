@@ -1,5 +1,5 @@
 <template>
-  <div class="container flex items-center py-[9px]">
+  <div id="header" class="container flex items-center py-[9px]">
     <nuxt-link to="/" class="w-12">
       <img src="@/assets/images/logo.svg" alt="Watch Store" />
     </nuxt-link>
@@ -70,7 +70,8 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/common';
+@import '@/assets/scss/variable';
+
 #nav:checked + nav {
   opacity: 1;
   pointer-events: auto;
@@ -86,7 +87,7 @@ nav > .nuxt-link-active {
   background-color: #666;
   @media (min-width: #{$screen-md}px) {
     background-color: transparent;
-    color: $raisin-black;
+    color: #1d1e2c;
   }
 }
 </style>

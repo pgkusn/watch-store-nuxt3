@@ -20,7 +20,7 @@
             {{ product.description }}
           </p>
           <p class="mt-8 text-xl">
-            {{ formatPrice(product.price) }}
+            {{ useFormatPrice(product.price) }}
           </p>
           <form class="mt-3 flex h-[50px]" @submit.prevent="updateState('cart')">
             <div class="relative w-[45%]">
@@ -88,15 +88,12 @@ import { OrNull, Product, States } from '@/types'
 
 const route = useRoute()
 const productStore = useProductStore()
-const { formatPrice } = useFormatPrice()
 
 const { states } = storeToRefs(productStore)
 const product = ref<OrNull<Product>>(null)
 const productData = computed(() => productStore.products)
 
-useHead({
-  title: computed(() => product.value?.name as string),
-})
+useHead({ title: computed(() => product.value?.name as string) })
 
 const amount = ref(1)
 const amountComputed = computed({

@@ -26,12 +26,12 @@
         <li>
           {{
             product.discount
-              ? formatPrice(Math.floor(product.price * product.discount))
-              : formatPrice(product.price)
+              ? useFormatPrice(Math.floor(product.price * product.discount))
+              : useFormatPrice(product.price)
           }}
         </li>
         <li v-if="product.discount < 1" class="ml-[6px] text-dark-gray line-through">
-          {{ formatPrice(product.price) }}
+          {{ useFormatPrice(product.price) }}
         </li>
       </ul>
       <div v-if="tool">
@@ -86,7 +86,6 @@ const props = defineProps({
 defineEmits(['removeProduct'])
 
 const productStore = useProductStore()
-const { formatPrice } = useFormatPrice()
 
 const { states } = storeToRefs(productStore)
 

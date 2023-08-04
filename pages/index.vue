@@ -224,7 +224,8 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 @use 'sass:math';
-@import '@/assets/scss/common';
+@import '@/assets/scss/variable';
+
 .hero {
   background-position: 10% 50%;
   @media (min-width: #{$screen-md}px) {

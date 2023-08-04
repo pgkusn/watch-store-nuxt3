@@ -125,16 +125,11 @@
 </template>
 
 <script lang="ts" setup>
+import dayjs from 'dayjs'
 import { Order } from '@/types'
 
-useHead({
-  title: 'Mypage',
-})
-
+useHead({ title: 'Mypage' })
 const memberStore = useMemberStore()
-const { $dayjs } = useNuxtApp()
-const { showList } = useShowList()
-const { formatPrice } = useFormatPrice()
 
 const currentPage = ref(1)
 const searchOrderID = ref('')
@@ -152,14 +147,14 @@ const orders = computed(() => {
     .map(item => ({
       orderID: item.orderID,
       content: item.content,
-      total: formatPrice(item.total),
-      createTime: $dayjs(item.createTime).format('YYYY-MM-DD hh:mm:ss'),
+      total: useFormatPrice(item.total),
+      createTime: dayjs(item.createTime).format('YYYY-MM-DD hh:mm:ss'),
     }))
     .filter(item =>
       searchOrderID.value ? item.orderID.includes(searchOrderID.value.trim()) : true
     )
 }) as unknown as Ref<Order[]>
-const showOrders = showList(orders) as Ref<Order[][]>
+const showOrders = useShowList(orders) as Ref<Order[][]>
 </script>
 
 <style lang="scss" scoped>

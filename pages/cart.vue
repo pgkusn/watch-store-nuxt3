@@ -29,19 +29,15 @@
 <script lang="ts" setup>
 import { Products, Product, NewOrder, NewOrderContent } from '@/types'
 
-useHead({
-  title: 'Cart',
-})
-
+useHead({ title: 'Cart' })
 const router = useRouter()
 const route = useRoute()
 const mainStore = useMainStore()
 const productStore = useProductStore()
 const memberStore = useMemberStore()
-const { showList } = useShowList()
 
 const allProducts = computed<Products[]>(() => productStore.states.cart)
-const products = showList(allProducts) as Ref<Products[][]>
+const products = useShowList(allProducts) as Ref<Products[][]>
 const showProducts = computed(() => {
   const page = Number(route.query.page)
   return page ? products.value[page - 1] : products.value[0]

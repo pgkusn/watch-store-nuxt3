@@ -35,8 +35,8 @@ definePageMeta({
 })
 
 const router = useRouter()
-const memberStore = useMemberStore()
 const mainStore = useMainStore()
+const memberStore = useMemberStore()
 
 const logout = async () => {
   if (confirm('確定登出？')) {
