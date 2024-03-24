@@ -187,7 +187,6 @@
 <script lang="ts" setup>
 import { Profile, LoginInfo, Order, Password } from '@/types'
 
-useHead({ title: 'Mypage' })
 const router = useRouter()
 const mainStore = useMainStore()
 const memberStore = useMemberStore()

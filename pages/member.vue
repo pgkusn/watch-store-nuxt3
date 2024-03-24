@@ -34,6 +34,8 @@ definePageMeta({
   middleware: 'auth',
 })
 
+useHead({ title: 'Mypage - Watch Store' })
+
 const router = useRouter()
 const mainStore = useMainStore()
 const memberStore = useMemberStore()

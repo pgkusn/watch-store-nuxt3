@@ -93,7 +93,10 @@ const { states } = storeToRefs(productStore)
 const product = ref<OrNull<Product>>(null)
 const productData = computed(() => productStore.products)
 
-useHead({ title: computed(() => product.value?.name as string) })
+useHead({
+  title: computed(() => product.value?.name as string),
+  titleTemplate: titleChunk => (titleChunk ? `${titleChunk} - Watch Store` : 'Watch Store'),
+})
 
 const amount = ref(1)
 const amountComputed = computed({

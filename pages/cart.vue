@@ -29,7 +29,7 @@
 <script lang="ts" setup>
 import { Products, Product, NewOrder, NewOrderContent } from '@/types'
 
-useHead({ title: 'Cart' })
+useHead({ title: 'Cart - Watch Store' })
 const router = useRouter()
 const route = useRoute()
 const mainStore = useMainStore()

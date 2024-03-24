@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import { Products } from '@/types'
 
-useHead({ title: 'Wishlist' })
+useHead({ title: 'Wishlist - Watch Store' })
 const router = useRouter()
 const route = useRoute()
 const productStore = useProductStore()

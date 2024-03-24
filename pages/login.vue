@@ -54,7 +54,7 @@
 <script lang="ts" setup>
 import { States } from '@/types'
 
-useHead({ title: 'Log in' })
+useHead({ title: 'Log in - Watch Store' })
 const router = useRouter()
 const route = useRoute()
 const mainStore = useMainStore()

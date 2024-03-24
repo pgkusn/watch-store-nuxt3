@@ -5,7 +5,7 @@
     <main class="relative flex-grow overflow-hidden">
       <!-- transition issue solution (https://github.com/nuxt/nuxt/issues/13350#issuecomment-1397297975) -->
       <Transition name="page" mode="out-in">
-        <div :key="($route.name as string)">
+        <div :key="$route.name as string">
           <NuxtPage />
         </div>
       </Transition>
@@ -21,9 +21,6 @@
 
 <script lang="ts" setup>
 useHead({
-  titleTemplate: titleChunk => {
-    return titleChunk ? `${titleChunk} - Watch Store` : 'Watch Store'
-  },
   link: [
     { rel: 'icon', type: 'image/x-icon', href: '/favicon.svg' },
     { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' },

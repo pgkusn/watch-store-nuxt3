@@ -128,7 +128,6 @@
 import dayjs from 'dayjs'
 import { Order } from '@/types'
 
-useHead({ title: 'Mypage' })
 const memberStore = useMemberStore()
 
 const currentPage = ref(1)

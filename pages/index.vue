@@ -212,6 +212,8 @@
 <script lang="ts" setup>
 import { useMediaQuery } from '@vueuse/core'
 
+useHead({ title: 'Watch Store' })
+
 const isMediumScreen = useMediaQuery('(min-width: 768px)')
 const { $AOS } = useNuxtApp()
 

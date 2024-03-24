@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import { Products } from '@/types'
 
-useHead({ title: 'Product' })
+useHead({ title: 'Product - Watch Store' })
 const { $gsap } = useNuxtApp()
 const route = useRoute()
 const productStore = useProductStore()
