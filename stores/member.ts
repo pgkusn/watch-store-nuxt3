@@ -295,6 +295,7 @@ export const useMemberStore = defineStore(
           method: API.readOrders.method as 'get',
           query: { auth },
         })) as RawOrder
+        if (!result) return
         orders.value = Object.keys(result).reduce((previousValue: Order[], currentValue) => {
           previousValue.push({
             orderID: currentValue,
