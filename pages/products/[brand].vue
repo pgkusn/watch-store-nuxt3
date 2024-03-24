@@ -13,7 +13,6 @@
 import { Products } from '@/types'
 
 useHead({ title: 'Product - Watch Store' })
-const { $gsap } = useNuxtApp()
 const route = useRoute()
 const productStore = useProductStore()
 
@@ -42,10 +41,8 @@ const showProducts = computed(() => {
 watch(
   () => route.query.page,
   () => {
-    $gsap.to(window, {
-      duration: 0.5,
-      scrollTo: '#header',
-      ease: 'Power1.easeOut',
+    window.requestAnimationFrame(() => {
+      window.scrollTo(0, 0)
     })
   }
 )

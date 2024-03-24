@@ -1,5 +1,5 @@
 <template>
-  <div id="header" class="container flex items-center py-[9px]">
+  <div class="container flex items-center py-[9px]">
     <nuxt-link to="/" class="w-12">
       <img src="@/assets/images/logo.svg" alt="Watch Store" />
     </nuxt-link>
