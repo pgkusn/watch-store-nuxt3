@@ -1,14 +1,5 @@
 import API from '@/assets/data/api.json'
-import {
-  OrNull,
-  FetchError,
-  LoginInfo,
-  SignUpData,
-  Profile,
-  RawOrder,
-  Order,
-  NewOrder,
-} from '@/types'
+import { OrNull, States, LoginInfo, SignUpData, Profile, RawOrder, Order, NewOrder } from '@/types'
 
 export const useMemberStore = defineStore(
   'member',
@@ -59,10 +50,6 @@ export const useMemberStore = defineStore(
       loginInfo.value = null
       orders.value = []
       profile.value = null
-      productStore.states = {
-        favorite: [],
-        cart: [],
-      }
     }
     const userSignUp = async ({ email, password }: { email: string; password: string }) => {
       try {
@@ -101,11 +88,16 @@ export const useMemberStore = defineStore(
     const readPreferences = async () => {
       const { localId, idToken: auth } = (loginInfo.value as LoginInfo) || {}
       try {
-        return await $fetch(API.readPreferences.url.replace(':uid', localId), {
-          baseURL: runtimeConfig.public.dbApiUrl,
-          method: API.readPreferences.method as 'get',
-          query: { auth },
-        })
+        const { cart = [], favorite = [] } = await $fetch(
+          API.readPreferences.url.replace(':uid', localId),
+          {
+            baseURL: runtimeConfig.public.dbApiUrl,
+            method: API.readPreferences.method as 'get',
+            query: { auth },
+          }
+        ).then(res => (res as States) ?? {})
+        if (!productStore.states.cart.length) productStore.states.cart = cart
+        if (!productStore.states.favorite.length) productStore.states.favorite = favorite
       } catch (error) {
         const { statusCode, data } = error as {
           statusCode: number

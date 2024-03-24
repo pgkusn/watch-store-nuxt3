@@ -52,13 +52,10 @@
 </template>
 
 <script lang="ts" setup>
-import { States } from '@/types'
-
 useHead({ title: 'Log in - Watch Store' })
 const router = useRouter()
 const route = useRoute()
 const mainStore = useMainStore()
-const productStore = useProductStore()
 const memberStore = useMemberStore()
 const { $Swal } = useNuxtApp()
 
@@ -71,15 +68,9 @@ const submitHandler = async () => {
   try {
     await memberStore.userLogin(loginData)
 
-    // 如 DB 有資料時覆寫 store，否則將 store 狀態存入 DB
-    const preferences = ((await memberStore.readPreferences()) as States) || {}
-    const { favorite = [], cart = [] } = preferences
-    if (favorite.length || cart.length) {
-      productStore.states.favorite = favorite
-      productStore.states.cart = cart
-    } else {
-      await memberStore.updatePreferences()
-    }
+    // 如 store 無資料時將 DB 資料存入 store，否則將 store 狀態存入 DB
+    await memberStore.readPreferences()
+    await memberStore.updatePreferences()
 
     await mainStore.setAlertMsgHandler('登入成功')
     router.replace((route.query.redirect as string) || '/')
