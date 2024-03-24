@@ -14,7 +14,7 @@ export const useProductStore = defineStore(
       cart: [],
     })
 
-    const updateState = ({ name, value }: { name: keyof States; value: any }) => {
+    const updateState = async ({ name, value }: { name: keyof States; value: any }) => {
       const cloneStates: States = cloneDeep(states.value)
       const index = cloneStates[name].findIndex(item => item.id === value.id)
       if (index === -1) {
@@ -26,7 +26,11 @@ export const useProductStore = defineStore(
       states.value = cloneStates
 
       if (memberStore.loginInfo) {
-        memberStore.updatePreferences()
+        try {
+          await memberStore.updatePreferences()
+        } catch (error) {
+          throw error
+        }
       }
     }
     const getProducts = async () => {

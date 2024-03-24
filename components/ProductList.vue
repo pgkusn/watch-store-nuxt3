@@ -85,17 +85,32 @@ const props = defineProps({
 
 defineEmits(['removeProduct'])
 
+const router = useRouter()
+const route = useRoute()
 const productStore = useProductStore()
+const mainStore = useMainStore()
+const memberStore = useMemberStore()
 
 const { states } = storeToRefs(productStore)
 
 const inFavorite = (id: string) => states.value.favorite.find(item => item.id === id)
 const inCart = (id: string) => states.value.cart.find(item => item.id === id)
-const updateState = (name: 'favorite' | 'cart', value: Products) => {
+const updateState = async (name: 'favorite' | 'cart', value: Products) => {
   if (name === 'cart') {
     value.amount = 1
   }
-  productStore.updateState({ name, value })
+  try {
+    await productStore.updateState({ name, value })
+  } catch (error) {
+    const { statusCode, statusMessage } = error as { statusCode: number; statusMessage: string }
+    if (statusCode === 401) {
+      await mainStore.setAlertMsgHandler('登入逾時，請重新登入！')
+      memberStore.userLogout()
+      router.replace(`/login?redirect=${route.path}`)
+      return
+    }
+    showError({ statusCode, statusMessage })
+  }
 }
 </script>
 
