@@ -1,9 +1,9 @@
 <template>
   <footer class="bg-raisin-black text-white">
     <div class="container flex h-[80px] items-center justify-between">
-      <nuxt-link to="/" class="w-12">
+      <NuxtLink to="/" class="w-12">
         <img src="@/assets/images/logo-white.svg" alt="Watch Store" />
-      </nuxt-link>
+      </NuxtLink>
       <ClientOnly>
         <a
           href="https://www.freepik.com/vectors/logo"

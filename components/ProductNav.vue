@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-auto bg-raisin-black">
     <div class="container flex h-[52px] items-center whitespace-nowrap">
-      <nuxt-link
+      <NuxtLink
         v-for="item in brands"
         :key="item.brand"
         :to="`/products/${item.brand}`"
@@ -11,7 +11,7 @@
         ]"
       >
         {{ item.fullBrand }}
-      </nuxt-link>
+      </NuxtLink>
     </div>
   </div>
 </template>

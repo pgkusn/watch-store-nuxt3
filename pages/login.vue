@@ -34,12 +34,12 @@
       />
       <div class="mt-9 flex items-center">
         <a href="" class="mr-auto text-raisin-black" @click.prevent="forgotPassword"> 忘記密碼 </a>
-        <nuxt-link
+        <NuxtLink
           to="/signup"
           class="w-[65px] rounded border border-raisin-black text-center leading-[36px] text-raisin-black focus:outline-none"
         >
           註冊
-        </nuxt-link>
+        </NuxtLink>
         <button
           type="submit"
           class="ml-2 h-[38px] w-[65px] rounded bg-raisin-black text-white focus:outline-none"

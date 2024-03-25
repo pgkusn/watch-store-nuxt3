@@ -11,12 +11,12 @@
             A watch is like a piece of clothing, a message, a way of presenting oneself a costume
             that according to the person who wears it.
           </p>
-          <nuxt-link
-            to="/products"
-            class="home-btn mt-4 border-white text-[28px] transition-colors duration-300 hover:bg-[#FFFFFF4D]"
+          <button
+            class="home-btn w-full mt-4 border-white text-[28px] transition-colors duration-300 hover:bg-[#FFFFFF4D]"
+            @click="handleProductClick"
           >
             Shop now
-          </nuxt-link>
+          </button>
         </div>
       </div>
     </div>
@@ -32,12 +32,12 @@
               b.以獨特的風格設計風靡全球，品牌風格結合藝術與文化上的陶冶，加大霧銀色面綴以品牌創辦人Agnes
               Trouble 手寫體時標，搭配咖啡色皮質錶帶，體現品牌的法式優雅
             </p>
-            <nuxt-link
+            <NuxtLink
               to="/product/agnes/-N4ovK54kX-522rdJi67"
               class="mt-2 inline-block font-bold text-coral-black md:mt-4"
             >
               查看更多
-            </nuxt-link>
+            </NuxtLink>
           </div>
         </div>
       </section>
@@ -49,12 +49,12 @@
             <p class="mt-2 text-xl">
               源自美國的品牌<br />強調純粹簡單，輕鬆優雅的設計款式<br />是重視極簡迷人魅力的你不可錯過的一款錶
             </p>
-            <nuxt-link
+            <NuxtLink
               to="/product/calvin/-N4ovK5D01CE3svll6Gu"
               class="mt-2 inline-block font-bold text-coral-black md:mt-4"
             >
               查看更多
-            </nuxt-link>
+            </NuxtLink>
           </div>
         </div>
       </section>
@@ -66,12 +66,12 @@
             <p class="mt-2 text-xl">
               經典Logo面盤，時尚品牌，致力於經典與流行之間，並展現品牌企圖心，用以結合時尚與現代美感，簡約時尚設計，流露出優雅大方的亮采風情，搭配心情或場所，怡然呈現！
             </p>
-            <nuxt-link
+            <NuxtLink
               to="/product/coach/-N4ovK5D01CE3svll6Gv"
               class="mt-2 inline-block font-bold text-coral-black md:mt-4"
             >
               查看更多
-            </nuxt-link>
+            </NuxtLink>
           </div>
         </div>
       </section>
@@ -108,14 +108,14 @@
     <div class="bg-gray py-8 md:py-10">
       <div class="container flex flex-col items-center md:flex-row md:items-start">
         <div class="relative w-[345px] md:w-0 md:flex-grow" data-aos="fade-up">
-          <nuxt-link to="/product/agnes/-N4ovK57xoQ50_EkI9Nz" class="block">
+          <NuxtLink to="/product/agnes/-N4ovK57xoQ50_EkI9Nz" class="block">
             <div
               class="bg-cover bg-center pt-[101%] md:pt-[150%]"
               style="
                 background-image: url(https://images.unsplash.com/photo-1617265859824-46910d1ad447?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxODYyNXwwfDF8c2VhcmNofDJ8fHdyaXN0d2F0Y2h8ZW58MHwyfHx8MTYyNTgxNjg5Mw&ixlib=rb-1.2.1&q=80&w=1080);
               "
             />
-          </nuxt-link>
+          </NuxtLink>
           <div>
             <p class="mt-1 text-2xl leading-9">法式藝術風情時尚腕錶</p>
             <p>agnes b.</p>
@@ -130,14 +130,14 @@
           data-aos="fade-up"
           :data-aos-delay="isMediumScreen ? 50 : 0"
         >
-          <nuxt-link to="/product/folli/-N4ovK5EqDLbydHnjbAQ" class="block">
+          <NuxtLink to="/product/folli/-N4ovK5EqDLbydHnjbAQ" class="block">
             <div
               class="bg-cover bg-center pt-[101%] md:pt-[150%]"
               style="
                 background-image: url(https://images.unsplash.com/photo-1590087023009-2ec09f26a9f2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxODYyNXwwfDF8c2VhcmNofDE1fHx3cmlzdHdhdGNofGVufDB8Mnx8fDE2MjU4MTY4OTM&ixlib=rb-1.2.1&q=80&w=1080);
               "
             />
-          </nuxt-link>
+          </NuxtLink>
           <div>
             <p class="mt-1 text-2xl leading-9">Chronos 奢華時尚真皮日期腕錶</p>
             <p>Folli Follie</p>
@@ -214,8 +214,20 @@ import { useMediaQuery } from '@vueuse/core'
 
 useHead({ title: 'Watch Store' })
 
+const router = useRouter()
+const productStore = useProductStore()
 const isMediumScreen = useMediaQuery('(min-width: 768px)')
 const { $AOS } = useNuxtApp()
+
+const { products } = storeToRefs(productStore)
+
+const handleProductClick = async () => {
+  if (!products.value.length) {
+    await productStore.getProducts()
+    if (!products.value.length) return
+  }
+  router.push(`/products/${products.value[0].brand}`)
+}
 
 onMounted(() => {
   setTimeout(() => {

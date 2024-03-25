@@ -3,7 +3,7 @@
     class="grid auto-rows-auto grid-cols-2 gap-y-7 gap-x-[15px] md:grid-cols-4 md:gap-y-14 md:gap-x-[30px]"
   >
     <div v-for="product in products" :key="product.id" class="group relative flex flex-col">
-      <nuxt-link
+      <NuxtLink
         :to="`/product/${product.brand}/${product.id}`"
         class="product-link bg-50% relative block bg-white bg-center bg-no-repeat pt-[100%]"
       >
@@ -17,7 +17,7 @@
         >
           x {{ product.amount }}
         </div>
-      </nuxt-link>
+      </NuxtLink>
       <h2 class="mt-1 flex-grow text-xl lg:text-2xl">
         {{ product.name }}
       </h2>

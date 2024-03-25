@@ -3,9 +3,9 @@
     v-if="pages > 1"
     class="mt-10 flex justify-center text-xl leading-6 text-coral-black md:mt-15"
   >
-    <nuxt-link v-for="n in pages" :key="n" :to="`${url}?page=${n}`" :class="pageClass(n)">
+    <NuxtLink v-for="n in pages" :key="n" :to="`${url}?page=${n}`" :class="pageClass(n)">
       {{ n }}
-    </nuxt-link>
+    </NuxtLink>
   </div>
 </template>
 
