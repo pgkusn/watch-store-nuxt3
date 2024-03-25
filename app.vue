@@ -5,7 +5,7 @@
     <main class="relative flex-grow overflow-hidden">
       <!-- transition issue solution (https://github.com/nuxt/nuxt/issues/13350#issuecomment-1397297975) -->
       <Transition name="page" mode="out-in">
-        <div :key="$route.name as string">
+        <div :key="($route.name as string).split('-')[0]">
           <NuxtPage />
         </div>
       </Transition>
