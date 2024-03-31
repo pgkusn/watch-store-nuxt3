@@ -130,3 +130,13 @@ export interface Brands {
   brand: string
   fullBrand: string
 }
+
+export interface CityList {
+  CityName: string
+  CityEngName: string
+  AreaList: {
+    ZipCode: string
+    AreaName: string
+    AreaEngName: string
+  }[]
+}

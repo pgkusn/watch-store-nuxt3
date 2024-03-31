@@ -37,7 +37,6 @@ definePageMeta({
 useHead({ title: 'Mypage - Watch Store' })
 
 const router = useRouter()
-const mainStore = useMainStore()
 const memberStore = useMemberStore()
 
 const logout = async () => {
@@ -46,22 +45,4 @@ const logout = async () => {
     router.push('/')
   }
 }
-
-onMounted(async () => {
-  if (!memberStore.orders.length) {
-    try {
-      await nextTick()
-      await memberStore.readOrders()
-    } catch (error) {
-      const { statusCode, statusMessage } = error as { statusCode: number; statusMessage: string }
-      if (statusCode === 401) {
-        await mainStore.setAlertMsgHandler('登入逾時，請重新登入！')
-        memberStore.userLogout()
-        router.replace('/login?redirect=member')
-        return
-      }
-      showError({ statusCode, statusMessage })
-    }
-  }
-})
 </script>

@@ -1,4 +1,4 @@
-import API from '@/assets/data/api.json'
+import API from '@/assets/api.json'
 import { OrNull, States, LoginInfo, SignUpData, Profile, RawOrder, Order, NewOrder } from '@/types'
 
 export const useMemberStore = defineStore(

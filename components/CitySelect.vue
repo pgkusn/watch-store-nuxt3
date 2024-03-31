@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import cityData from '@/assets/data/city.json'
+import { CityList } from '@/types'
 
 const props = defineProps({
   required: {
@@ -31,8 +31,14 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  cities: {
+    type: Array,
+    default: () => [],
+  },
 })
 const emit = defineEmits(['changeCity'])
+
+const cityData = props.cities as CityList[]
 
 const cities = cityData.map(city => city.CityName)
 const citySelect = ref('')
@@ -45,10 +51,12 @@ const citySelectComputed = computed({
     areaSelect.value = ''
   },
 })
-const areas = computed(() =>
-  cityData
-    .find(city => city.CityName === citySelectComputed.value)
-    ?.AreaList.map(item => item.AreaName)
+
+const areas = computed(
+  () =>
+    cityData
+      .find(city => city.CityName === citySelectComputed.value)
+      ?.AreaList.map(item => item.AreaName)
 )
 const areaSelect = ref('')
 const areaSelectComputed = computed({

@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-11 sm:px-8 md:mt-0 md:flex-grow md:pl-[8.6%]">
+  <div v-if="memberStore.orders.length" class="mt-11 sm:px-8 md:mt-0 md:flex-grow md:pl-[8.6%]">
     <div class="max-w-[250px]">
       <input
         v-model="searchOrderIDComputed"
@@ -128,6 +128,8 @@
 import dayjs from 'dayjs'
 import { Order } from '@/types'
 
+const router = useRouter()
+const mainStore = useMainStore()
 const memberStore = useMemberStore()
 
 const currentPage = ref(1)
@@ -154,6 +156,24 @@ const orders = computed(() => {
     )
 }) as unknown as Ref<Order[]>
 const showOrders = useShowList(orders) as Ref<Order[][]>
+
+onMounted(async () => {
+  if (!memberStore.orders.length) {
+    try {
+      await nextTick()
+      await memberStore.readOrders()
+    } catch (error) {
+      const { statusCode, statusMessage } = error as { statusCode: number; statusMessage: string }
+      if (statusCode === 401) {
+        await mainStore.setAlertMsgHandler('登入逾時，請重新登入！')
+        memberStore.userLogout()
+        router.replace('/login?redirect=member')
+        return
+      }
+      showError({ statusCode, statusMessage })
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>

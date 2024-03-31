@@ -1,10 +1,10 @@
 <template>
   <div class="container !max-w-[635px] py-10 md:py-15">
-    <form @submit.prevent="submitHandler">
+    <form @submit.prevent="currentStep === 1 ? nextStep() : submitForm()">
       <table class="w-full">
         <caption class="border-b border-blue-gray pb-2 text-left font-medium">
           {{
-            caption
+            currentStep === 1 ? '建立帳號' : '建立個人資料'
           }}
         </caption>
         <tbody class="text-blue-gray">
@@ -90,7 +90,7 @@
                   </select>
                 </div>
                 <br />
-                <CitySelect @changeCity="value => changeCity('contact', value)" />
+                <CitySelect :cities="cities" @changeCity="value => changeCity('contact', value)" />
                 <input
                   v-model="profileData.address.contact.other"
                   type="text"
@@ -118,7 +118,7 @@
                   </select>
                 </div>
                 <br />
-                <CitySelect @changeCity="value => changeCity('delivery', value)" />
+                <CitySelect :cities="cities" @changeCity="value => changeCity('delivery', value)" />
                 <input
                   v-model="profileData.address.delivery.other"
                   type="text"
@@ -148,9 +148,12 @@ const router = useRouter()
 const mainStore = useMainStore()
 const memberStore = useMemberStore()
 
+if (!mainStore.cities.length) {
+  await mainStore.getCities()
+}
+
+const { cities } = storeToRefs(mainStore)
 const currentStep = ref(1)
-const submitHandler = computed(() => (currentStep.value === 1 ? nextStep : submitForm))
-const caption = computed(() => (currentStep.value === 1 ? '建立帳號' : '建立個人資料'))
 
 // step1
 const accountData = reactive({
@@ -187,6 +190,10 @@ const profileData: Profile = reactive({
     },
   },
 })
+const isModified = ref(false)
+watch(profileData, () => {
+  isModified.value = true
+})
 
 const changeCity = (
   type: 'contact' | 'delivery',
@@ -195,28 +202,31 @@ const changeCity = (
   profileData.address[type].city = city
   profileData.address[type].area = area
 }
+
+const isSubmit = ref(false)
 const submitForm = async () => {
-  // sign up
-  let signUpData = null
+  if (isSubmit.value) return
+  isSubmit.value = true
   try {
-    signUpData = (await memberStore.userSignUp(accountData)) as SignUpData
-  } catch (error) {
-    const { statusMessage } = error as { statusCode: number; statusMessage: string }
-    await mainStore.setAlertMsgHandler(statusMessage)
-    currentStep.value = 1
-  }
+    const signUpData = (await memberStore.userSignUp(accountData)) as SignUpData
 
-  if (!signUpData) return
-
-  // create profile & preferences
-  try {
     await memberStore.createProfile(signUpData, profileData)
     await memberStore.updatePreferences()
+
     await mainStore.setAlertMsgHandler('註冊成功')
+    isModified.value = false
     router.push('/')
   } catch (error) {
-    const { statusCode, statusMessage } = error as { statusCode: number; statusMessage: string }
-    showError({ statusCode, statusMessage })
+    const { statusMessage } = error as { statusCode: number; statusMessage: string }
+    mainStore.setAlertMsgHandler(statusMessage)
+  } finally {
+    isSubmit.value = false
   }
 }
+
+onBeforeRouteLeave((to, from) => {
+  if (!isModified.value) return
+  const answer = window.confirm('您確定要離開嗎？資料尚未儲存。')
+  if (!answer) return false
+})
 </script>

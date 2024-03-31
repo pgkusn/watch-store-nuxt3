@@ -56,6 +56,7 @@
                 </div>
                 <br />
                 <CitySelect
+                  :cities="cities"
                   :address="profileData.address.contact"
                   @changeCity="value => changeCity('contact', value)"
                 />
@@ -87,6 +88,7 @@
                 </div>
                 <br />
                 <CitySelect
+                  :cities="cities"
                   :address="profileData.address.delivery"
                   :required="true"
                   @changeCity="value => changeCity('delivery', value)"
@@ -192,6 +194,11 @@ const mainStore = useMainStore()
 const memberStore = useMemberStore()
 const productStore = useProductStore()
 
+if (!mainStore.cities.length) {
+  await mainStore.getCities()
+}
+
+const { cities } = storeToRefs(mainStore)
 const { loginInfo, orders, profile } = storeToRefs(memberStore) as {
   loginInfo: Ref<LoginInfo>
   orders: Ref<Order[]>
