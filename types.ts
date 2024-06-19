@@ -9,20 +9,7 @@ export interface FetchError {
   }
 }
 
-export interface RawProducts {
-  [key: string]: {
-    brand: string
-    description: string
-    discount: number
-    fullBrand: string
-    name: string
-    price: number
-    url: string
-  }
-}
-
-export interface Products {
-  id: string
+interface RawProduct {
   brand: string
   description: string
   discount: number
@@ -30,6 +17,14 @@ export interface Products {
   name: string
   price: number
   url: string
+}
+
+export interface RawProducts {
+  [key: string]: RawProduct
+}
+
+export interface Products extends RawProduct {
+  id: string
   amount: number
 }
 
@@ -46,17 +41,6 @@ export interface States {
   cart: Products[]
 }
 
-export interface LoginInfo {
-  kind: string
-  localId: string
-  email: string
-  displayName?: string
-  idToken: string
-  registered?: boolean
-  refreshToken: string
-  expiresIn: string
-}
-
 export interface SignUpData {
   kind: string
   idToken: string
@@ -64,6 +48,11 @@ export interface SignUpData {
   refreshToken: string
   expiresIn: string
   localId: string
+}
+
+export interface LoginInfo extends SignUpData {
+  displayName?: string
+  registered?: boolean
 }
 
 export interface Profile {
@@ -88,25 +77,16 @@ export interface Profile {
   }
 }
 
-export interface RawOrder {
-  [key: string]: {
-    content: {
-      amount: number
-      name: string
-    }[]
-    createTime: number
-    total: number
-  }
+interface OrderWithMemberID extends NewOrder {
+  memberID: string
 }
 
-export interface Order {
+export interface RawOrder {
+  [key: string]: OrderWithMemberID
+}
+
+export interface Order extends OrderWithMemberID {
   orderID: string
-  content: {
-    amount: number
-    name: string
-  }[]
-  createTime: number
-  total: number
 }
 
 export interface NewOrder {
