@@ -258,14 +258,12 @@ export const useMemberStore = defineStore(
       }
     }
     const createOrder = async (order: NewOrder) => {
-      const { localId, idToken: auth } = (loginInfo.value as LoginInfo) || {}
-      const url = API.createOrder.url.replace(':uid', localId)
+      const { localId } = (loginInfo.value as LoginInfo) || {}
       try {
-        await $fetch(url, {
+        await $fetch(API.createOrder.url, {
           baseURL: runtimeConfig.public.dbApiUrl,
           method: API.createOrder.method as 'post',
-          query: { auth },
-          body: order,
+          body: { memberID: localId, ...order },
         })
       } catch (error) {
         const { statusCode, data } = error as {
@@ -279,22 +277,21 @@ export const useMemberStore = defineStore(
       }
     }
     const readOrders = async () => {
-      const { localId, idToken: auth } = (loginInfo.value as LoginInfo) || {}
-      const url = API.readOrders.url.replace(':uid', localId)
+      const { localId } = (loginInfo.value as LoginInfo) || {}
       try {
-        const result = (await $fetch(url, {
+        const result = (await $fetch(API.readOrders.url, {
           baseURL: runtimeConfig.public.dbApiUrl,
           method: API.readOrders.method as 'get',
-          query: { auth },
         })) as RawOrder
         if (!result) return
-        orders.value = Object.keys(result).reduce((previousValue: Order[], currentValue) => {
+        const orderList = Object.keys(result).reduce((previousValue: Order[], currentValue) => {
           previousValue.push({
             orderID: currentValue,
             ...result[currentValue],
           } as unknown as Order)
           return previousValue
         }, [])
+        orders.value = orderList.filter(order => order.memberID === localId)
       } catch (error) {
         const { statusCode, data } = error as {
           statusCode: number
