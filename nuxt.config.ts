@@ -10,6 +10,7 @@ export default defineNuxtConfig({
         autoImports: ['defineStore', 'acceptHMRUpdate', 'storeToRefs'],
       },
     ],
+    '@zadigetvoltaire/nuxt-gtm',
   ],
   imports: {
     dirs: ['stores'],
@@ -27,5 +28,8 @@ export default defineNuxtConfig({
       authApiUrl: process.env.NUXT_AUTH_API_URL,
       firebaseApiKey: '', // override in .env
     },
+  },
+  gtm: {
+    id: 'GTM-WWTCV42S',
   },
 })
