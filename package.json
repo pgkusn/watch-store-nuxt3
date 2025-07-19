@@ -1,5 +1,9 @@
 {
+  "name": "watch-store-nuxt3",
   "private": true,
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev --dotenv .env.local",
