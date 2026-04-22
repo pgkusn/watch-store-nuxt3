@@ -32,7 +32,4 @@ export default defineNuxtConfig({
   gtm: {
     id: 'GTM-WWTCV42S',
   },
-  nitro: {
-    preset: 'aws_amplify',
-  },
 })
