@@ -24,9 +24,9 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      dbApiUrl: process.env.NUXT_DB_API_URL,
-      authApiUrl: process.env.NUXT_AUTH_API_URL,
-      firebaseApiKey: '', // override in .env
+      dbApiUrl: '',
+      authApiUrl: '',
+      firebaseApiKey: '',
     },
   },
   gtm: {
